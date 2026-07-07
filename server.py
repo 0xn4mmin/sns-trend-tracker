@@ -9,8 +9,10 @@
 import base64
 import email.utils
 import gzip
+import http.cookiejar
 import json
 import os
+import random
 import re
 import threading
 import time
@@ -37,6 +39,21 @@ _cache = {}
 _cache_lock = threading.Lock()
 _img_cache = {}
 _img_lock = threading.Lock()
+
+# 원본(인스타/X 등)이 401/429로 차단하면 일정 시간 요청을 멈춰 차단이 길어지는 것을 막습니다.
+_cooldown = {}
+_cooldown_lock = threading.Lock()
+
+
+def in_cooldown(source: str) -> bool:
+    with _cooldown_lock:
+        return time.time() < _cooldown.get(source, 0)
+
+
+def set_cooldown(source: str, seconds: int):
+    with _cooldown_lock:
+        _cooldown[source] = max(_cooldown.get(source, 0), time.time() + seconds)
+    print("[cooldown] %s: %d초 대기" % (source, seconds))
 
 USERNAME_RE = re.compile(r"^[A-Za-z0-9._\-]{1,40}$")
 
@@ -311,12 +328,44 @@ def save_accounts(path, accounts):
 
 
 # ================================================================ 인스타그램 릴스
-def fetch_ig_reels(username: str):
-    """인스타그램 웹 내부 API(무인증)로 계정의 최근 릴스를 가져옵니다."""
+def _ig_opener():
+    """instagram.com 홈을 먼저 방문해 쿠키(csrftoken 등)를 받은 opener를 만듭니다."""
+    cj = http.cookiejar.CookieJar()
+    op = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
+    op.addheaders = [("User-Agent", UA), ("Accept-Language", "ko-KR,ko;q=0.9,en;q=0.8")]
+    try:
+        op.open("https://www.instagram.com/", timeout=10).read()
+    except Exception:
+        pass
+    csrf = next((c.value for c in cj if c.name == "csrftoken"), "")
+    return op, csrf
+
+
+def ig_profile_json(username: str, opener=None, csrf: str = ""):
+    """web_profile_info를 호출합니다. 401/403/429는 HTTPError로 올려 쿨다운 판단에 씁니다."""
     url = ("https://www.instagram.com/api/v1/users/web_profile_info/?username="
            + quote(username))
+    req = urllib.request.Request(url)
+    req.add_header("User-Agent", UA)
+    req.add_header("x-ig-app-id", IG_APP_ID)
+    req.add_header("Accept", "*/*")
+    req.add_header("Referer", "https://www.instagram.com/%s/" % quote(username))
+    if csrf:
+        req.add_header("x-csrftoken", csrf)
+    opener_fn = opener.open if opener else urllib.request.urlopen
+    with opener_fn(req, timeout=12) as resp:
+        return json.loads(resp.read().decode())
+
+
+def fetch_ig_reels(username: str, opener=None, csrf: str = ""):
+    """인스타그램 웹 내부 API(무인증)로 계정의 최근 릴스를 가져옵니다.
+    차단 관련 HTTPError(401/403/429)는 호출자에게 전파합니다."""
     try:
-        data = http_json(url, headers={"x-ig-app-id": IG_APP_ID}, timeout=12)
+        data = ig_profile_json(username, opener, csrf)
+    except urllib.error.HTTPError as e:
+        if e.code in (401, 403, 429):
+            raise
+        return []
     except Exception:
         return []
     user = (data.get("data") or {}).get("user") or {}
@@ -345,9 +394,20 @@ def get_reels(force: bool):
     accounts = load_accounts(path, defaults)
 
     def fetch():
-        with ThreadPoolExecutor(max_workers=6) as pool:
-            results = pool.map(fetch_ig_reels, accounts)
-        merged = [r for chunk in results for r in chunk]
+        # 인스타그램은 병렬·고빈도 요청에 IP 차단(401)을 걸므로 순차 + 간격으로 순하게 수집합니다.
+        if in_cooldown("ig"):
+            return []
+        opener, csrf = _ig_opener()
+        merged = []
+        for i, username in enumerate(accounts):
+            if i:
+                time.sleep(1.0 + random.random() * 0.8)
+            try:
+                merged.extend(fetch_ig_reels(username, opener, csrf))
+            except urllib.error.HTTPError:
+                # 401/403/429 → 즉시 중단하고 쿨다운 (계속 두드리면 차단이 길어짐)
+                set_cooldown("ig", 900)
+                break
         merged.sort(key=lambda r: r["views"], reverse=True)
         return merged
     reels, fetched_at = cached(("reels", tuple(accounts)), force, fetch)
@@ -374,15 +434,20 @@ def _find_timeline_entries(node):
 
 
 def fetch_x_posts(username: str):
-    """트위터 syndication(임베드용, 무인증) API로 계정의 최근 트윗을 참여수와 함께 가져옵니다."""
+    """트위터 syndication(임베드용, 무인증) API로 계정의 최근 트윗을 참여수와 함께 가져옵니다.
+    레이트리밋(429)은 HTTPError로 올려 쿨다운 판단에 씁니다."""
     url = "https://syndication.twitter.com/srv/timeline-profile/screen-name/" + quote(username)
     try:
-        _, body = http_get(url, headers={"Accept": "text/html"}, timeout=12)
+        _, body = http_get(url, headers={"Accept": "text/html"}, timeout=12, retries=0)
         html = body.decode("utf-8", "ignore")
         m = re.search(r'<script id="__NEXT_DATA__"[^>]*>(.*?)</script>', html, re.S)
         if not m:
             return []
         data = json.loads(m.group(1))
+    except urllib.error.HTTPError as e:
+        if e.code == 429:
+            raise
+        return []
     except Exception:
         return []
     entries = _find_timeline_entries(data) or []
@@ -421,19 +486,27 @@ def get_x_posts(force: bool):
     accounts = load_accounts(path, defaults)
 
     def fetch():
-        # syndication은 동시 요청이 많으면 빈 응답을 주므로 동시성을 낮춥니다.
-        with ThreadPoolExecutor(max_workers=3) as pool:
-            results = list(pool.map(fetch_x_posts, accounts))
-        # 그래도 비어 온 계정은 순차 재시도 (연속 3계정 실패 시 서비스 장애로 보고 중단)
+        # syndication은 동시·고빈도 요청에 429를 걸므로 순차 + 간격으로 수집합니다.
+        if in_cooldown("x"):
+            return []
+        posts = []
         misses = 0
-        for i, (acct, chunk) in enumerate(zip(accounts, results)):
-            if chunk or misses >= 3:
-                continue
-            time.sleep(0.4)
-            retried = fetch_x_posts(acct)
-            results[i] = retried
-            misses = 0 if retried else misses + 1
-        return [p for chunk in results for p in chunk]
+        for i, acct in enumerate(accounts):
+            if i:
+                time.sleep(0.5 + random.random() * 0.5)
+            try:
+                chunk = fetch_x_posts(acct)
+                if not chunk:  # 빈 응답이면 한 번만 재시도
+                    time.sleep(0.8)
+                    chunk = fetch_x_posts(acct)
+            except urllib.error.HTTPError:
+                set_cooldown("x", 900)
+                break
+            posts.extend(chunk)
+            misses = 0 if chunk else misses + 1
+            if misses >= 4:  # 연속 실패는 서비스 쪽 문제 — 중단
+                break
+        return posts
     posts, fetched_at = cached(("x", tuple(accounts)), force, fetch)
     return posts, accounts, fetched_at
 
@@ -449,13 +522,15 @@ def _threads_lsd_and_userid(username: str):
     except Exception:
         pass
     user_id = None
-    try:
-        info = http_json(
-            "https://www.instagram.com/api/v1/users/web_profile_info/?username=" + quote(username),
-            headers={"x-ig-app-id": IG_APP_ID}, timeout=12)
-        user_id = (info.get("data") or {}).get("user", {}).get("id")
-    except Exception:
-        pass
+    if not in_cooldown("ig"):  # 인스타 API를 함께 쓰므로 쿨다운을 공유
+        try:
+            info = ig_profile_json(username)
+            user_id = (info.get("data") or {}).get("user", {}).get("id")
+        except urllib.error.HTTPError as e:
+            if e.code in (401, 403, 429):
+                set_cooldown("ig", 900)
+        except Exception:
+            pass
     return lsd, user_id
 
 
@@ -533,7 +608,7 @@ def get_threads_posts(force: bool):
     accounts = load_accounts(path, defaults)
 
     def fetch():
-        with ThreadPoolExecutor(max_workers=5) as pool:
+        with ThreadPoolExecutor(max_workers=3) as pool:
             results = pool.map(fetch_threads_posts, accounts)
         return [p for chunk in results for p in chunk]
     posts, fetched_at = cached(("threads", tuple(accounts)), force, fetch)
@@ -748,12 +823,14 @@ class Handler(BaseHTTPRequestHandler):
 
         if parsed.path == "/api/reels":
             reels, accounts, fetched_at = get_reels(force)
-            self._send(200, {"reels": reels[:80], "accounts": accounts, "fetchedAt": fetched_at})
+            self._send(200, {"reels": reels[:80], "accounts": accounts,
+                             "fetchedAt": fetched_at, "cooldown": in_cooldown("ig")})
             return
 
         if parsed.path == "/api/x":
             posts, accounts, fetched_at = get_x_posts(force)
-            self._send(200, {"posts": posts, "accounts": accounts, "fetchedAt": fetched_at})
+            self._send(200, {"posts": posts, "accounts": accounts,
+                             "fetchedAt": fetched_at, "cooldown": in_cooldown("x")})
             return
 
         if parsed.path == "/api/threads":
@@ -839,7 +916,20 @@ class Handler(BaseHTTPRequestHandler):
         self._send(404, {"error": "not found"})
 
 
+def _background_warmer():
+    """빈 캐시(차단으로 수집 실패한 소스)를 10분마다 자동 재수집합니다.
+    차단이 풀리면 사용자가 새로고침하지 않아도 탭이 스스로 회복됩니다."""
+    while True:
+        time.sleep(600)
+        for fn in (get_reels, get_x_posts, get_threads_posts):
+            try:
+                fn(False)  # 캐시가 차 있으면 즉시 반환, 비어 있으면 재수집
+            except Exception:
+                pass
+
+
 if __name__ == "__main__":
+    threading.Thread(target=_background_warmer, daemon=True).start()
     server = ThreadingHTTPServer((HOST, PORT), Handler)
     print(f"TrendPulse 서버 실행 중: http://{'localhost' if HOST in ('0.0.0.0', '127.0.0.1') else HOST}:{PORT}")
     server.serve_forever()

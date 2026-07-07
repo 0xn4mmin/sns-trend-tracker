@@ -1233,7 +1233,9 @@ async function loadReels(force = false) {
     if (!reelsData.length) {
       grid.innerHTML = '';
       $('reelsCount').textContent = '';
-      showStatus(status, { icon: 'inbox', title: '가져온 릴스가 없습니다', desc: '인스타그램이 일시적으로 요청을 제한했을 수 있어요. 잠시 후 새로고침하거나 계정을 추가해 보세요.', retry: () => loadReels(true) });
+      showStatus(status, data.cooldown
+        ? { icon: 'clock', title: '인스타그램이 잠시 조회를 제한했어요', desc: '무인증 조회가 일시 차단된 상태입니다. 서버가 10분마다 자동으로 재시도하며, 차단이 풀리면 이 탭은 자동으로 채워집니다.' }
+        : { icon: 'inbox', title: '가져온 릴스가 없습니다', desc: '잠시 후 새로고침하거나 계정을 추가해 보세요.', retry: () => loadReels(true) });
       return;
     }
     renderReels();
@@ -1396,6 +1398,7 @@ async function loadSocial(kind, force = false) {
     if (!cfg.data.length) {
       listEl.innerHTML = '';
       if (kind === 'threads') showThreadsFallback(data.accounts);
+      else if (data.cooldown) showStatus(statusEl, { icon: 'clock', title: 'X가 잠시 조회를 제한했어요', desc: '무인증 조회가 일시 제한된 상태입니다. 서버가 10분마다 자동으로 재시도하며, 제한이 풀리면 이 탭은 자동으로 채워집니다.' });
       else showStatus(statusEl, { icon: 'inbox', title: '가져온 포스트가 없습니다', desc: '계정명을 확인하거나 잠시 후 새로고침해 주세요.', retry: () => loadSocial(kind, true) });
       return;
     }
