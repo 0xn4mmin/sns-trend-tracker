@@ -1528,8 +1528,12 @@ $('refreshBtn').onclick = () => {
   else loadVideos(true);
 };
 
-setPageHead('youtube');
-initCategories().then(() => loadVideos());
+/* URL 파라미터로 초기 탭/테마 지정 가능: /?tab=shorts&theme=light */
+const qp = new URLSearchParams(location.search);
+if (qp.get('theme') === 'light' || qp.get('theme') === 'dark') applyTheme(qp.get('theme'));
+const initTab = VIEWS[qp.get('tab')] ? qp.get('tab') : 'youtube';
+setPageHead(initTab);
+initCategories().then(() => switchTab(initTab));
 </script>
 </body>
 </html>
