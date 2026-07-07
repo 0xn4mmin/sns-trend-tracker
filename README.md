@@ -16,9 +16,20 @@ python3 server.py
 서버가 `HOST`(기본 `0.0.0.0`)와 `PORT` 환경변수를 읽으므로 대부분의 PaaS에 그대로 올라갑니다.
 Dockerfile과 Procfile이 모두 포함되어 있습니다.
 
+### Render 원클릭 배포 (권장)
+
+1. [render.com](https://render.com) 접속 → GitHub 계정으로 로그인
+2. **New +** → **Blueprint** → 이 저장소(`sns-trend-tracker`) 선택
+3. `render.yaml`이 자동 인식됨 → **Apply** 클릭
+4. 1~2분 뒤 `https://trendpulse-xxxx.onrender.com` 형태의 공개 URL 발급
+
+> 무료 플랜은 15분간 접속이 없으면 잠들었다가 첫 요청 때 ~50초 걸려 깨어납니다.
+> 상시 구동이 필요하면 Starter 플랜($7/월)으로 올리면 됩니다.
+
+### 기타 플랫폼
+
 | 플랫폼 | 방법 |
 |---|---|
-| **Render** | New Web Service → 이 저장소 연결 → Start Command: `python server.py` (또는 Docker 자동 감지) |
 | **Railway** | 저장소 연결만 하면 Procfile을 자동 인식 |
 | **Fly.io** | `fly launch` → Dockerfile 자동 감지 |
 | **Cloudtype** (국내) | Python 앱으로 배포, 시작 명령 `python server.py` |

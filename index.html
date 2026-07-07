@@ -2,62 +2,68 @@
 <html lang="ko" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>TrendPulse — 모든 SNS 트렌드를 한눈에</title>
 <meta name="description" content="유튜브·쇼츠·릴스·틱톡·X·스레드 인기 콘텐츠와 AI 영상 트렌드를 실시간으로 모아보는 트렌드 인텔리전스 대시보드">
 <meta property="og:title" content="TrendPulse — 모든 SNS 트렌드를 한눈에">
 <meta property="og:description" content="유튜브·쇼츠·릴스·틱톡·X·스레드 인기 콘텐츠와 AI 영상 트렌드를 한 화면에서.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff4d8d'/%3E%3Cstop offset='1' stop-color='%238b5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='24' fill='url(%23g)'/%3E%3Cpath d='M22 62l16-16 12 12 24-24' stroke='white' stroke-width='9' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M58 34h16v16' stroke='white' stroke-width='9' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff3d81'/%3E%3Cstop offset='1' stop-color='%238b5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='24' fill='url(%23g)'/%3E%3Cpath d='M22 62l16-16 12 12 24-24' stroke='white' stroke-width='9' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M58 34h16v16' stroke='white' stroke-width='9' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">
 <style>
   :root {
     color-scheme: dark;
-    --bg: #0a0c11;
-    --bg2: #0d1017;
-    --panel: #12151d;
-    --panel2: #161a24;
-    --card: #151924;
-    --card-h: #1a1f2d;
-    --border: #222939;
-    --border-h: #35405a;
-    --text: #eef1f8;
-    --t2: #a7b0c3;
-    --t3: #667089;
-    --brand: #ff4d8d;
+    --bg: #07080d;
+    --panel: #0e1017;
+    --panel2: #12141d;
+    --card: #10131c;
+    --card-h: #151927;
+    --border: rgba(148, 163, 200, .11);
+    --border-h: rgba(148, 163, 200, .26);
+    --text: #f0f2f9;
+    --t2: #9ba4ba;
+    --t3: #5d6680;
+    --brand: #ff3d81;
     --brand2: #8b5cf6;
-    --grad: linear-gradient(135deg, #ff4d8d, #8b5cf6);
+    --cyan: #22d3ee;
+    --grad: linear-gradient(120deg, #ff3d81, #a855f7);
+    --grad3: linear-gradient(120deg, #ff3d81, #a855f7 55%, #6366f1);
     --gold: #ffd166;
-    --shadow: 0 10px 32px rgba(0,0,0,.45);
-    --shadow-sm: 0 4px 14px rgba(0,0,0,.3);
-    --glass: rgba(10,12,17,.82);
-    --skel1: #1a1f2c;
-    --skel2: #232a3c;
-    --input: #10131b;
-    --hot: #ff4d8d;
-    --glow1: rgba(255,77,141,.09);
-    --glow2: rgba(139,92,246,.10);
+    --hot: #ff5c93;
+    --shadow: 0 18px 44px rgba(2, 4, 10, .55);
+    --shadow-sm: 0 6px 18px rgba(2, 4, 10, .35);
+    --glass: rgba(8, 9, 14, .72);
+    --skel1: rgba(148, 163, 200, .07);
+    --skel2: rgba(148, 163, 200, .15);
+    --input: rgba(148, 163, 200, .06);
+    --hoverbg: rgba(148, 163, 200, .07);
+    --activebg: rgba(148, 163, 200, .1);
+    --ring: rgba(168, 85, 247, .35);
+    --scrim: linear-gradient(180deg, transparent 30%, rgba(4, 5, 9, .62) 68%, rgba(4, 5, 9, .92));
   }
   [data-theme="light"] {
     color-scheme: light;
-    --bg: #f3f5fa;
-    --bg2: #eef1f8;
-    --panel: #ffffff;
+    --bg: #f4f5f9;
+    --panel: #fbfbfd;
     --panel2: #ffffff;
     --card: #ffffff;
     --card-h: #ffffff;
-    --border: #e3e8f2;
-    --border-h: #c6cfe2;
-    --text: #171d2b;
-    --t2: #4e586e;
-    --t3: #8892a6;
-    --shadow: 0 12px 32px rgba(23,29,43,.10);
-    --shadow-sm: 0 3px 12px rgba(23,29,43,.07);
-    --glass: rgba(243,245,250,.85);
-    --skel1: #e8ecf4;
-    --skel2: #f4f6fb;
-    --input: #f3f5fa;
-    --glow1: rgba(255,77,141,.06);
-    --glow2: rgba(139,92,246,.07);
+    --border: rgba(38, 50, 84, .1);
+    --border-h: rgba(38, 50, 84, .24);
+    --text: #151a28;
+    --t2: #4d5871;
+    --t3: #8791a8;
+    --shadow: 0 18px 40px rgba(21, 26, 40, .12);
+    --shadow-sm: 0 5px 16px rgba(21, 26, 40, .07);
+    --glass: rgba(248, 249, 252, .78);
+    --skel1: rgba(38, 50, 84, .07);
+    --skel2: rgba(38, 50, 84, .13);
+    --input: rgba(38, 50, 84, .05);
+    --hoverbg: rgba(38, 50, 84, .06);
+    --activebg: rgba(38, 50, 84, .09);
+    --ring: rgba(139, 92, 246, .3);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -67,150 +73,176 @@
     color: var(--text);
     font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", sans-serif;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
     min-height: 100vh;
   }
-  body::before {
-    content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
-    background:
-      radial-gradient(720px 380px at 12% -8%, var(--glow1), transparent 65%),
-      radial-gradient(720px 380px at 88% -8%, var(--glow2), transparent 65%);
+  button, input { font-family: inherit; }
+  ::selection { background: rgba(255, 61, 129, .35); }
+  :focus-visible { outline: 2px solid var(--brand2); outline-offset: 2px; border-radius: 8px; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: rgba(148, 163, 200, .18); border-radius: 8px; border: 3px solid transparent; background-clip: content-box; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 200, .32); border: 3px solid transparent; background-clip: content-box; }
+  ::-webkit-scrollbar-track { background: transparent; }
+
+  /* ---------------- 배경 레이어: 오로라 + 그레인 ---------------- */
+  .aurora { position: fixed; inset: 0; z-index: -2; overflow: hidden; pointer-events: none; filter: blur(90px) saturate(1.15); }
+  .aurora i { position: absolute; border-radius: 50%; }
+  .aurora i:nth-child(1) { width: 620px; height: 620px; background: #ff3d81; opacity: .13; top: -260px; left: -140px; animation: drift1 30s ease-in-out infinite alternate; }
+  .aurora i:nth-child(2) { width: 560px; height: 560px; background: #7c3aed; opacity: .15; top: -300px; right: -120px; animation: drift2 38s ease-in-out infinite alternate; }
+  .aurora i:nth-child(3) { width: 460px; height: 460px; background: #0ea5e9; opacity: .07; bottom: -220px; left: 42%; animation: drift3 44s ease-in-out infinite alternate; }
+  [data-theme="light"] .aurora i:nth-child(1) { opacity: .1; }
+  [data-theme="light"] .aurora i:nth-child(2) { opacity: .11; }
+  [data-theme="light"] .aurora i:nth-child(3) { opacity: .06; }
+  @keyframes drift1 { to { transform: translate(90px, 60px) scale(1.12); } }
+  @keyframes drift2 { to { transform: translate(-70px, 80px) scale(1.08); } }
+  @keyframes drift3 { to { transform: translate(-60px, -70px) scale(1.15); } }
+  .grain {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .05; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
   }
-  button { font-family: inherit; }
-  input { font-family: inherit; }
-  ::selection { background: rgba(255,77,141,.32); }
-  :focus-visible { outline: 2px solid var(--brand2); outline-offset: 2px; border-radius: 6px; }
+  [data-theme="light"] .grain { opacity: .035; }
 
   .ic { width: 16px; height: 16px; flex: none; stroke: currentColor; stroke-width: 2;
         fill: none; stroke-linecap: round; stroke-linejoin: round; vertical-align: -3px; }
   .ic.fill { fill: currentColor; stroke: none; }
+  .num { font-family: "Space Grotesk", "Pretendard Variable", sans-serif; font-variant-numeric: tabular-nums; }
 
-  /* ---------------- 헤더 ---------------- */
-  header {
-    position: sticky; top: 0; z-index: 60;
-    background: var(--glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--border);
+  /* ---------------- 앱 셸: 사이드바 + 콘텐츠 ---------------- */
+  .app { display: flex; min-height: 100vh; max-width: 1720px; margin: 0 auto; }
+  aside {
+    width: 226px; flex: none; position: sticky; top: 0; height: 100vh; z-index: 70;
+    display: flex; flex-direction: column; padding: 22px 14px 18px;
+    border-right: 1px solid var(--border);
   }
-  .topbar {
-    max-width: 1560px; margin: 0 auto; padding: 12px 28px;
-    display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
-  }
-  .brand { display: flex; align-items: center; gap: 11px; text-decoration: none; color: inherit; }
+  .brand { display: flex; align-items: center; gap: 11px; text-decoration: none; color: inherit; padding: 0 6px; }
   .logomark {
-    width: 36px; height: 36px; border-radius: 11px; background: var(--grad);
+    width: 37px; height: 37px; border-radius: 12px; background: var(--grad3); flex: none;
     display: grid; place-items: center; color: #fff;
-    box-shadow: 0 4px 16px rgba(255,77,141,.35);
+    box-shadow: 0 6px 18px rgba(255, 61, 129, .35), inset 0 1px 0 rgba(255,255,255,.28);
   }
   .logomark .ic { width: 19px; height: 19px; stroke-width: 2.4; }
-  .brand h1 { font-size: 19.5px; font-weight: 800; letter-spacing: -.4px; line-height: 1.1; }
-  .brand h1 em { font-style: normal; background: var(--grad); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-  .brand small { display: block; font-size: 11px; font-weight: 500; color: var(--t3); letter-spacing: .1px; margin-top: 2px; }
-  #today { color: var(--t3); font-size: 12.5px; font-weight: 500; padding-left: 4px; }
+  .brand b { font-family: "Space Grotesk", sans-serif; font-size: 18.5px; font-weight: 700; letter-spacing: -.3px; line-height: 1.05; display: block; }
+  .brand b em { font-style: normal; background: var(--grad); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .brand small { display: block; font-size: 10.5px; font-weight: 500; color: var(--t3); letter-spacing: .3px; margin-top: 3px; }
 
+  .nav { display: flex; flex-direction: column; gap: 2px; margin-top: 26px; }
+  .nav-label { font-size: 10.5px; font-weight: 700; letter-spacing: .14em; color: var(--t3); text-transform: uppercase; padding: 0 12px; margin: 14px 0 6px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 11px; width: 100%; text-align: left;
+    padding: 10px 12px; border-radius: 12px; border: none; background: none; cursor: pointer;
+    color: var(--t2); font-size: 13.5px; font-weight: 600; position: relative;
+    transition: background .15s, color .15s;
+  }
+  .nav-item:hover { background: var(--hoverbg); color: var(--text); }
+  .nav-item.active { background: var(--activebg); color: var(--text); font-weight: 700; }
+  .nav-item.active::before {
+    content: ""; position: absolute; left: -14px; top: 22%; height: 56%; width: 3px;
+    border-radius: 0 3px 3px 0; background: var(--grad);
+  }
+  .nav-item .ic { width: 17px; height: 17px; color: var(--t3); transition: color .15s; }
+  .nav-item:hover .ic { color: var(--t2); }
+  .nav-item.active[data-tab="youtube"] .ic, .nav-item.active[data-tab="shorts"] .ic { color: #ff4444; }
+  .nav-item.active[data-tab="ai"] .ic { color: #a78bfa; }
+  .nav-item.active[data-tab="reels"] .ic { color: #e1447c; }
+  .nav-item.active[data-tab="tiktok"] .ic { color: #25d0c8; }
+  .nav-item.active[data-tab="x"] .ic, .nav-item.active[data-tab="threads"] .ic { color: var(--text); }
+
+  .side-foot { margin-top: auto; padding: 14px 12px 0; border-top: 1px solid var(--border); }
+  .side-foot p { font-size: 10.5px; color: var(--t3); line-height: 1.75; }
+  .side-foot .ver { display: inline-flex; align-items: center; gap: 5px; margin-bottom: 8px;
+    font-family: "Space Grotesk", sans-serif; font-size: 10px; font-weight: 600; letter-spacing: .08em;
+    color: var(--t2); border: 1px solid var(--border); border-radius: 999px; padding: 3px 9px; }
+  .side-foot .ver i { width: 5px; height: 5px; border-radius: 50%; background: #34d399; box-shadow: 0 0 6px #34d399; font-style: normal; }
+
+  .shell { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+
+  /* ---------------- 톱바 ---------------- */
+  .topbar {
+    position: sticky; top: 0; z-index: 60;
+    background: var(--glass); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--border);
+    padding: 13px 28px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .brand-m { display: none; }
+  .page-head { min-width: 0; }
+  .page-head h1 { font-size: 17.5px; font-weight: 800; letter-spacing: -.4px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .page-head p { font-size: 11.5px; color: var(--t3); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .topbar .right { margin-left: auto; display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
   .search {
     display: flex; align-items: center; gap: 8px;
-    background: var(--input); border: 1px solid var(--border); border-radius: 11px;
-    padding: 0 13px; height: 38px; width: 290px; transition: border-color .15s, box-shadow .15s;
+    background: var(--input); border: 1px solid var(--border); border-radius: 12px;
+    padding: 0 13px; height: 38px; width: 280px; transition: border-color .15s, box-shadow .15s, background .15s;
   }
-  .search:focus-within { border-color: var(--brand2); box-shadow: 0 0 0 3px rgba(139,92,246,.16); }
+  .search:focus-within { border-color: var(--brand2); box-shadow: 0 0 0 3px var(--ring); background: var(--panel2); }
   .search .ic { color: var(--t3); }
   .search input { flex: 1; background: none; border: none; color: var(--text); font-size: 13.5px; min-width: 0; }
   .search input:focus { outline: none; }
   .search input::placeholder { color: var(--t3); }
-  .search kbd {
-    font-family: inherit; font-size: 10.5px; color: var(--t3);
-    border: 1px solid var(--border); border-radius: 5px; padding: 1px 6px;
-  }
+  .search kbd { font-family: "Space Grotesk", sans-serif; font-size: 10px; color: var(--t3);
+    border: 1px solid var(--border); border-radius: 5px; padding: 1px 6px; }
   .iconbtn {
-    width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center;
+    width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center;
     background: var(--input); border: 1px solid var(--border); color: var(--t2);
-    cursor: pointer; transition: border-color .15s, color .15s, transform .1s;
+    cursor: pointer; transition: border-color .15s, color .15s, transform .12s, background .15s;
   }
-  .iconbtn:hover { border-color: var(--border-h); color: var(--text); }
-  .iconbtn:active { transform: scale(.94); }
+  .iconbtn:hover { border-color: var(--border-h); color: var(--text); background: var(--panel2); }
+  .iconbtn:active { transform: scale(.93); }
   .iconbtn .ic { width: 17px; height: 17px; }
   #refreshBtn.loading .ic { animation: spin 1s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  #updated { color: var(--t3); font-size: 11.5px; white-space: nowrap; display: flex; align-items: center; gap: 5px; }
+  #updated { color: var(--t3); font-size: 11px; white-space: nowrap; display: flex; align-items: center; gap: 5px; }
   #updated .ic { width: 12px; height: 12px; }
 
-  /* ---------------- 플랫폼 탭 ---------------- */
-  .tabwrap { border-top: 1px solid transparent; }
-  .tabs {
-    max-width: 1560px; margin: 0 auto; padding: 0 24px 10px;
-    display: flex; gap: 7px; overflow-x: auto; scrollbar-width: none;
-  }
-  .tabs::-webkit-scrollbar { display: none; }
-  .tab {
-    display: flex; align-items: center; gap: 7px; white-space: nowrap;
-    padding: 8px 15px; border-radius: 999px; font-size: 13.5px; font-weight: 600;
-    background: transparent; border: 1px solid transparent; color: var(--t2); cursor: pointer;
-    transition: background .15s, color .15s, border-color .15s;
-  }
-  .tab:hover { background: var(--panel2); color: var(--text); }
-  .tab.active { background: var(--card); border-color: var(--border-h); color: var(--text); box-shadow: var(--shadow-sm); font-weight: 700; }
-  .tab .ic { width: 15px; height: 15px; }
-  .tab.active[data-tab="youtube"] .ic, .tab.active[data-tab="shorts"] .ic { color: #ff3b3b; }
-  .tab.active[data-tab="ai"] .ic { color: #a78bfa; }
-  .tab.active[data-tab="reels"] .ic { color: #e1447c; }
-  .tab.active[data-tab="tiktok"] .ic { color: #25d0c8; }
-  .tab.active[data-tab="x"] .ic, .tab.active[data-tab="threads"] .ic { color: var(--text); }
-
   /* ---------------- 툴바 (유튜브/쇼츠) ---------------- */
-  .toolbar {
-    max-width: 1560px; margin: 0 auto; padding: 16px 28px 0;
-    display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
-  }
+  .toolbar { padding: 18px 28px 0; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
   .chips { display: flex; gap: 6px; flex-wrap: wrap; }
   .chip {
-    padding: 7px 14px; border-radius: 999px; font-size: 13px; font-weight: 500;
-    background: var(--panel); border: 1px solid var(--border); color: var(--t2);
-    cursor: pointer; white-space: nowrap; transition: all .15s;
+    padding: 7.5px 15px; border-radius: 999px; font-size: 12.5px; font-weight: 600;
+    background: var(--input); border: 1px solid var(--border); color: var(--t2);
+    cursor: pointer; white-space: nowrap; transition: all .16s;
   }
-  .chip:hover { border-color: var(--border-h); color: var(--text); }
+  .chip:hover { border-color: var(--border-h); color: var(--text); transform: translateY(-1px); }
   .chip.active {
     background: var(--grad); border-color: transparent; color: #fff; font-weight: 700;
-    box-shadow: 0 3px 12px rgba(255,77,141,.32);
+    box-shadow: 0 4px 14px rgba(255, 61, 129, .35);
   }
   .periods {
     display: flex; gap: 3px; margin-left: auto;
-    background: var(--panel); border: 1px solid var(--border); border-radius: 11px; padding: 3px;
+    background: var(--input); border: 1px solid var(--border); border-radius: 12px; padding: 3px;
   }
   .period {
-    padding: 6px 13px; border-radius: 8px; background: transparent; border: none;
-    color: var(--t2); font-size: 12.5px; font-weight: 500; cursor: pointer; transition: all .15s;
+    padding: 6px 13px; border-radius: 9px; background: transparent; border: none;
+    color: var(--t2); font-size: 12.5px; font-weight: 600; cursor: pointer; transition: all .15s;
   }
   .period:hover { color: var(--text); }
-  .period.active { background: var(--card-h); color: var(--text); font-weight: 700; box-shadow: var(--shadow-sm); }
-  [data-theme="dark"] .period.active { background: #262e42; }
+  .period.active { background: var(--panel2); color: var(--text); font-weight: 700; box-shadow: var(--shadow-sm); }
 
   /* ---------------- 정렬 드롭다운 ---------------- */
   .sortmenu { position: relative; }
   .sorttoggle {
     display: flex; align-items: center; gap: 7px;
-    background: var(--panel); border: 1px solid var(--border); color: var(--text);
-    border-radius: 11px; padding: 8px 13px; font-size: 12.5px; font-weight: 600; cursor: pointer;
-    transition: border-color .15s;
+    background: var(--input); border: 1px solid var(--border); color: var(--text);
+    border-radius: 12px; padding: 8.5px 13px; font-size: 12.5px; font-weight: 600; cursor: pointer;
+    transition: border-color .15s, background .15s;
   }
-  .sorttoggle:hover { border-color: var(--border-h); }
+  .sorttoggle:hover { border-color: var(--border-h); background: var(--panel2); }
   .sorttoggle .lbl { color: var(--t3); font-weight: 500; }
   .sorttoggle .caret { width: 13px; height: 13px; color: var(--t3); transition: transform .18s; }
   .sortmenu.open .caret { transform: rotate(180deg); }
   .sortlist {
     position: absolute; top: calc(100% + 7px); right: 0; z-index: 45;
-    background: var(--panel2); border: 1px solid var(--border); border-radius: 13px; padding: 5px;
-    min-width: 176px; box-shadow: var(--shadow);
-    opacity: 0; transform: translateY(-5px) scale(.98); pointer-events: none;
-    transition: opacity .14s, transform .14s;
+    background: var(--panel2); border: 1px solid var(--border); border-radius: 14px; padding: 5px;
+    min-width: 178px; box-shadow: var(--shadow);
+    opacity: 0; transform: translateY(-6px) scale(.97); pointer-events: none;
+    transition: opacity .15s, transform .15s;
   }
   .sortmenu.open .sortlist { opacity: 1; transform: none; pointer-events: auto; }
   .sortlist button {
     display: flex; width: 100%; align-items: center; gap: 9px;
     background: transparent; border: none; color: var(--text);
-    padding: 9px 11px; border-radius: 9px; font-size: 13px; cursor: pointer; text-align: left;
+    padding: 9px 11px; border-radius: 10px; font-size: 13px; font-weight: 500; cursor: pointer; text-align: left;
   }
-  .sortlist button:hover { background: var(--card-h); }
-  [data-theme="dark"] .sortlist button:hover { background: #1e2433; }
+  .sortlist button:hover { background: var(--hoverbg); }
   .sortlist button .ic { width: 14px; height: 14px; color: var(--t2); }
   .sortlist button.sel { color: var(--brand); font-weight: 700; }
   .sortlist button.sel .ic { color: var(--brand); }
@@ -218,218 +250,264 @@
   .sortlist button.sel .check { opacity: 1; }
 
   /* ---------------- 본문 공통 ---------------- */
-  main { max-width: 1560px; margin: 0 auto; padding: 20px 28px 70px; }
-  .view { animation: fadein .22s ease; }
-  @keyframes fadein { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+  main { padding: 20px 28px 64px; flex: 1; }
+  .view { animation: viewin .28s cubic-bezier(.2, .7, .3, 1); }
+  /* 진입 모션은 transform 전용 — 창이 가려져 애니메이션이 일시정지돼도 콘텐츠는 항상 보이도록 opacity를 쓰지 않습니다 */
+  @keyframes viewin { from { transform: translateY(8px); } to { transform: none; } }
+  @keyframes rise { from { transform: translateY(14px); } to { transform: none; } }
 
-  .viewhead { display: flex; align-items: flex-end; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
-  .viewhead h2 { font-size: 17px; font-weight: 800; letter-spacing: -.3px; display: flex; align-items: center; gap: 8px; }
-  .viewhead h2 .ic { width: 18px; height: 18px; color: var(--brand); }
-  .viewdesc { color: var(--t3); font-size: 12.5px; margin-top: 5px; line-height: 1.55; }
-  .viewtools { margin-left: auto; display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+  .viewbar { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; margin-bottom: 16px; }
   .count { color: var(--t3); font-size: 12px; white-space: nowrap; }
-
+  .viewbar .grow { flex: 1; }
   .managebtn {
     display: flex; align-items: center; gap: 7px;
-    background: var(--panel); border: 1px solid var(--border); color: var(--t2);
-    border-radius: 11px; padding: 8px 13px; font-size: 12.5px; font-weight: 600; cursor: pointer;
+    background: var(--input); border: 1px solid var(--border); color: var(--t2);
+    border-radius: 12px; padding: 8.5px 13px; font-size: 12.5px; font-weight: 600; cursor: pointer;
     transition: all .15s;
   }
-  .managebtn:hover, .managebtn.on { border-color: var(--border-h); color: var(--text); }
+  .managebtn:hover, .managebtn.on { border-color: var(--border-h); color: var(--text); background: var(--panel2); }
   .managebtn .ic { width: 14px; height: 14px; }
 
   .manage {
     display: none; background: var(--panel); border: 1px solid var(--border);
-    border-radius: 16px; padding: 16px 18px; margin-bottom: 18px;
+    border-radius: 18px; padding: 17px 19px; margin-bottom: 18px;
   }
-  .manage.open { display: block; animation: fadein .18s ease; }
-  .manage h3 { font-size: 13px; font-weight: 700; color: var(--t2); margin-bottom: 11px; display: flex; align-items: center; gap: 7px; }
-  .manage h3 .ic { width: 14px; height: 14px; }
+  .manage.open { display: block; animation: viewin .2s ease; }
+  .manage h3 { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--t3); margin-bottom: 12px; display: flex; align-items: center; gap: 7px; }
+  .manage h3 .ic { width: 13px; height: 13px; }
   .acc-chips { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 13px; }
   .acc-chip {
     display: inline-flex; gap: 7px; align-items: center;
-    background: var(--card); border: 1px solid var(--border); border-radius: 999px;
+    background: var(--input); border: 1px solid var(--border); border-radius: 999px;
     padding: 5px 7px 5px 13px; font-size: 12.5px; font-weight: 500; color: var(--text);
   }
   .acc-chip b { font-weight: 600; }
   .acc-chip button {
-    background: var(--input); border: none; color: var(--t3); border-radius: 50%;
+    background: var(--hoverbg); border: none; color: var(--t3); border-radius: 50%;
     width: 19px; height: 19px; cursor: pointer; display: grid; place-items: center; transition: all .12s;
   }
   .acc-chip button:hover { color: #fff; background: var(--brand); }
   .acc-chip button .ic { width: 10px; height: 10px; stroke-width: 2.5; }
-  .addbar { display: flex; gap: 8px; max-width: 560px; }
+  .addbar { display: flex; gap: 8px; max-width: 540px; }
   .addbar input {
-    flex: 1; background: var(--input); border: 1px solid var(--border); border-radius: 11px;
+    flex: 1; background: var(--input); border: 1px solid var(--border); border-radius: 12px;
     padding: 10px 14px; color: var(--text); font-size: 13.5px; transition: border-color .15s, box-shadow .15s;
   }
-  .addbar input:focus { outline: none; border-color: var(--brand2); box-shadow: 0 0 0 3px rgba(139,92,246,.16); }
+  .addbar input:focus { outline: none; border-color: var(--brand2); box-shadow: 0 0 0 3px var(--ring); }
   .addbar input::placeholder { color: var(--t3); }
   .addbar button {
     display: flex; align-items: center; gap: 6px;
-    background: var(--grad); border: none; border-radius: 11px; padding: 10px 17px;
-    color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; transition: opacity .15s, transform .1s;
+    background: var(--grad); border: none; border-radius: 12px; padding: 10px 17px;
+    color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; transition: opacity .15s, transform .12s;
   }
   .addbar button:hover { opacity: .9; }
   .addbar button:active { transform: scale(.96); }
   .addbar button .ic { width: 14px; height: 14px; stroke-width: 2.5; }
 
-  /* ---------------- 카드 그리드 ---------------- */
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(252px, 1fr)); gap: 16px; }
-  .grid.shorts { grid-template-columns: repeat(auto-fill, minmax(172px, 1fr)); }
-  .card {
-    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
-    overflow: hidden; cursor: pointer; position: relative;
-    transition: transform .16s ease, border-color .16s, box-shadow .16s;
+  /* ---------------- TOP 3 스포트라이트 ---------------- */
+  .featrow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 18px; }
+  .fcard {
+    position: relative; border-radius: 20px; overflow: hidden; cursor: pointer; isolation: isolate;
+    aspect-ratio: 16 / 10.5; background: var(--card); border: 1px solid var(--border);
+    transition: transform .2s cubic-bezier(.2, .7, .3, 1), box-shadow .2s, border-color .2s;
+    animation: rise .45s cubic-bezier(.2, .7, .3, 1) both;
   }
-  .card:hover { transform: translateY(-4px); border-color: var(--border-h); box-shadow: var(--shadow); }
-  .thumbwrap { position: relative; overflow: hidden; background: #0a0c11; }
-  .thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; transition: transform .3s ease; }
+  .fcard:hover { transform: translateY(-5px); border-color: var(--border-h); box-shadow: var(--shadow), 0 0 0 1px var(--ring); }
+  .fcard .fthumb { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .45s cubic-bezier(.2, .7, .3, 1); }
+  .fcard:hover .fthumb { transform: scale(1.06); }
+  .fcard .fscrim { position: absolute; inset: 0; background: var(--scrim); }
+  .fcard .fno {
+    position: absolute; top: 10px; left: 16px; z-index: 2;
+    font-family: "Space Grotesk", sans-serif; font-size: 46px; font-weight: 700; line-height: 1;
+    background: linear-gradient(160deg, #fff, rgba(255,255,255,.5));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    text-shadow: none; filter: drop-shadow(0 3px 10px rgba(0,0,0,.55));
+  }
+  .fcard.n1 .fno { background: linear-gradient(160deg, #ffe9a3, #ffb84d); -webkit-background-clip: text; background-clip: text; }
+  .fcard .len { position: absolute; top: 14px; right: 14px; z-index: 2; }
+  .fcard .fbody { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; padding: 16px 18px 15px; }
+  .fcard .ftitle {
+    color: #fff; font-size: 15px; font-weight: 750; line-height: 1.42; letter-spacing: -.2px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    text-shadow: 0 2px 12px rgba(0,0,0,.45);
+  }
+  .fcard .fmeta { margin-top: 7px; display: flex; align-items: center; gap: 7px; color: rgba(255,255,255,.78); font-size: 11.5px; font-weight: 500; }
+  .fcard .fmeta .chn { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .fcard .fstats { margin-top: 9px; display: flex; gap: 13px; }
+  .fcard .fstats .stat { color: rgba(255,255,255,.92); font-size: 12.5px; font-weight: 700; }
+  .fcard .fstats .stat .ic { color: rgba(255,255,255,.75); }
+  .fcard .fstats .stat.hot { color: #ffa3c4; }
+  .fcard .fstats .stat.hot .ic { color: #ffa3c4; }
+  .fcard .playov { border-radius: 0; }
+
+  /* ---------------- 카드 그리드 ---------------- */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(248px, 1fr)); gap: 15px; }
+  .grid.shorts { grid-template-columns: repeat(auto-fill, minmax(174px, 1fr)); }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 18px;
+    overflow: hidden; cursor: pointer; position: relative;
+    transition: transform .18s cubic-bezier(.2, .7, .3, 1), border-color .18s, box-shadow .18s;
+    animation: rise .4s cubic-bezier(.2, .7, .3, 1) both;
+  }
+  .card:hover { transform: translateY(-4px); border-color: var(--border-h); box-shadow: var(--shadow-sm), 0 0 0 1px var(--ring); }
+  .thumbwrap { position: relative; overflow: hidden; background: #090a10; }
+  .thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; transition: transform .35s cubic-bezier(.2, .7, .3, 1); }
   .grid.shorts .thumb { aspect-ratio: 9/13.5; }
-  .card:hover .thumb { transform: scale(1.045); }
+  .card:hover .thumb { transform: scale(1.05); }
   .playov {
     position: absolute; inset: 0; display: grid; place-items: center;
-    background: rgba(6,8,12,.34); opacity: 0; transition: opacity .18s;
+    background: rgba(5, 6, 10, .32); opacity: 0; transition: opacity .18s; z-index: 3;
   }
-  .card:hover .playov { opacity: 1; }
+  .card:hover .playov, .fcard:hover .playov { opacity: 1; }
   .playov span {
-    width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center;
-    background: rgba(255,255,255,.94); color: #10131b; box-shadow: 0 6px 20px rgba(0,0,0,.4);
+    width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center;
+    background: rgba(255,255,255,.95); color: #0c0e14; box-shadow: 0 8px 24px rgba(0,0,0,.45);
+    transform: scale(.85); transition: transform .18s;
   }
+  .card:hover .playov span, .fcard:hover .playov span { transform: scale(1); }
   .playov .ic { width: 19px; height: 19px; margin-left: 2px; }
   .rank {
     position: absolute; top: 9px; left: 9px; z-index: 2;
-    background: rgba(8,10,15,.78); backdrop-filter: blur(4px); color: #e8ecf5;
-    font-weight: 800; font-size: 11.5px; padding: 3px 9px; border-radius: 8px; letter-spacing: -.2px;
+    background: rgba(6, 7, 12, .72); backdrop-filter: blur(6px); color: #edf0f7;
+    font-weight: 800; font-size: 11px; padding: 3.5px 9px; border-radius: 9px; letter-spacing: -.2px;
+    border: 1px solid rgba(255,255,255,.09);
   }
-  .rank.r1 { background: linear-gradient(135deg,#ffd76a,#ff9636); color: #3d2400; }
-  .rank.r2 { background: linear-gradient(135deg,#eef1f7,#b9c3d6); color: #2b3243; }
-  .rank.r3 { background: linear-gradient(135deg,#f2b58a,#c97e4a); color: #3a2008; }
+  .rank.r1 { background: linear-gradient(135deg, #ffd76a, #ff9636); color: #3d2400; border-color: transparent; }
+  .rank.r2 { background: linear-gradient(135deg, #eef1f7, #b9c3d6); color: #2b3243; border-color: transparent; }
+  .rank.r3 { background: linear-gradient(135deg, #f2b58a, #c97e4a); color: #3a2008; border-color: transparent; }
   .len {
     position: absolute; right: 8px; bottom: 8px; z-index: 2;
-    background: rgba(8,10,15,.82); color: #fff; font-size: 10.5px; font-weight: 600;
-    padding: 2px 7px; border-radius: 6px;
+    background: rgba(6, 7, 12, .78); backdrop-filter: blur(4px); color: #fff; font-size: 10.5px; font-weight: 600;
+    padding: 2.5px 7px; border-radius: 7px; font-family: "Space Grotesk", sans-serif;
   }
   .meta { padding: 12px 13px 13px; }
   .title {
-    font-size: 13.5px; font-weight: 650; line-height: 1.4; letter-spacing: -.1px;
+    font-size: 13.5px; font-weight: 650; line-height: 1.42; letter-spacing: -.1px;
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
     min-height: 38px;
   }
   .sub { margin-top: 7px; color: var(--t3); font-size: 11.5px; display: flex; align-items: center; gap: 6px; min-width: 0; }
   .sub .chn { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--t2); font-weight: 500; }
-  .sub .dot { color: var(--t3); flex: none; }
+  .sub .dot { flex: none; opacity: .6; }
   .stats { margin-top: 9px; display: flex; flex-wrap: wrap; gap: 5px 13px; font-size: 12px; color: var(--t2); }
-  .stat { display: inline-flex; align-items: center; gap: 4.5px; font-weight: 500; }
+  .stat { display: inline-flex; align-items: center; gap: 4.5px; font-weight: 600; }
   .stat .ic { width: 13px; height: 13px; color: var(--t3); }
-  .stat.hot { color: var(--hot); font-weight: 700; }
+  .stat.hot { color: var(--hot); font-weight: 750; }
   .stat.hot .ic { color: var(--hot); }
 
   /* ---------------- 포스트 카드 (X·스레드) ---------------- */
   .postlist { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 14px; }
   .postcard {
     display: flex; flex-direction: column; background: var(--card);
-    border: 1px solid var(--border); border-radius: 16px; padding: 16px 17px; cursor: pointer;
-    transition: transform .16s, border-color .16s, box-shadow .16s;
+    border: 1px solid var(--border); border-radius: 18px; padding: 16px 17px; cursor: pointer;
+    position: relative; overflow: hidden;
+    transition: transform .18s cubic-bezier(.2, .7, .3, 1), border-color .18s, box-shadow .18s;
+    animation: rise .4s cubic-bezier(.2, .7, .3, 1) both;
   }
-  .postcard:hover { transform: translateY(-3px); border-color: var(--border-h); box-shadow: var(--shadow); }
-  .phead { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .postcard:hover { transform: translateY(-3px); border-color: var(--border-h); box-shadow: var(--shadow-sm), 0 0 0 1px var(--ring); }
+  .postcard .goic { position: absolute; top: 15px; right: 15px; color: var(--t3); opacity: 0; transition: opacity .15s; }
+  .postcard:hover .goic { opacity: 1; }
+  .phead { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; padding-right: 22px; }
   .avatar {
-    width: 36px; height: 36px; border-radius: 50%; flex: none;
+    width: 37px; height: 37px; border-radius: 50%; flex: none;
     display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 14.5px;
-    background: var(--av, var(--grad));
+    background: var(--av, var(--grad)); box-shadow: inset 0 1px 0 rgba(255,255,255,.25);
   }
   .pwho { min-width: 0; line-height: 1.3; }
   .pwho b { display: block; font-size: 13.5px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .pwho span { font-size: 11.5px; color: var(--t3); }
   .prank {
     margin-left: auto; flex: none; background: var(--input); color: var(--t2);
-    font-weight: 800; font-size: 11px; padding: 3px 9px; border-radius: 8px;
+    font-weight: 800; font-size: 10.5px; padding: 3px 9px; border-radius: 9px; border: 1px solid var(--border);
   }
-  .prank.top { background: var(--grad); color: #fff; }
+  .prank.top { background: var(--grad); color: #fff; border-color: transparent; }
   .ptext {
-    font-size: 13.5px; line-height: 1.55; white-space: pre-wrap; word-break: break-word;
+    font-size: 13.5px; line-height: 1.58; white-space: pre-wrap; word-break: break-word;
     display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden;
   }
-  .pmedia { margin-top: 11px; border-radius: 12px; width: 100%; max-height: 240px; object-fit: cover; background: #0a0c11; }
+  .pmedia { margin-top: 11px; border-radius: 13px; width: 100%; max-height: 250px; object-fit: cover; background: #090a10; border: 1px solid var(--border); }
   .pstats {
     display: flex; gap: 15px; margin-top: 13px; padding-top: 12px;
     border-top: 1px solid var(--border); font-size: 12px; color: var(--t2);
   }
-  .pstats .stat b { font-weight: 700; color: var(--text); }
+  .pstats .stat b { font-weight: 750; color: var(--text); }
   .pstats .stat.hot b { color: var(--hot); }
 
   /* ---------------- AI 탭 ---------------- */
-  .ai-section { margin-bottom: 36px; }
-  .ai-section > h2 { font-size: 16px; font-weight: 800; letter-spacing: -.3px; display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .ai-section { margin-bottom: 38px; }
+  .eyebrow { display: block; font-size: 10.5px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--t3); margin-bottom: 6px; font-family: "Space Grotesk", sans-serif; }
+  .ai-section > h2 { font-size: 17px; font-weight: 800; letter-spacing: -.35px; display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
   .ai-section > h2 .ic { width: 17px; height: 17px; color: var(--brand2); }
-  .ai-section > p { color: var(--t3); font-size: 12px; margin-bottom: 13px; }
-  .modelrow { display: grid; grid-template-columns: repeat(auto-fill, minmax(248px, 1fr)); gap: 11px; }
+  .modelrow { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 11px; }
   .modelcard {
     display: block; text-decoration: none; background: var(--card);
-    border: 1px solid var(--border); border-radius: 14px; padding: 14px 15px; color: var(--text);
-    transition: transform .15s, border-color .15s, box-shadow .15s;
+    border: 1px solid var(--border); border-radius: 16px; padding: 14px 15px; color: var(--text);
+    transition: transform .16s, border-color .16s, box-shadow .16s;
+    animation: rise .4s cubic-bezier(.2, .7, .3, 1) both;
   }
-  .modelcard:hover { transform: translateY(-2px); border-color: var(--border-h); box-shadow: var(--shadow-sm); }
-  .modelcard .mid { font-size: 13px; font-weight: 700; word-break: break-all; line-height: 1.4; letter-spacing: -.1px; }
-  .modelcard .msub { margin-top: 9px; display: flex; gap: 6px 11px; align-items: center; font-size: 11.5px; color: var(--t3); flex-wrap: wrap; }
+  .modelcard:hover { transform: translateY(-3px); border-color: var(--border-h); box-shadow: var(--shadow-sm); }
+  .modelcard .mid { font-size: 13px; font-weight: 700; word-break: break-all; line-height: 1.42; letter-spacing: -.1px; }
+  .modelcard .msub { margin-top: 10px; display: flex; gap: 6px 11px; align-items: center; font-size: 11.5px; color: var(--t3); flex-wrap: wrap; }
   .modelcard .msub .stat .ic { width: 12px; height: 12px; }
-  .pill { border-radius: 999px; padding: 2.5px 9px; font-size: 10.5px; font-weight: 700; letter-spacing: .1px; }
-  .pill.t2v { background: rgba(255,77,141,.14); color: #ff6ba0; }
-  .pill.i2v { background: rgba(139,92,246,.16); color: #a78bfa; }
+  .pill { border-radius: 999px; padding: 2.5px 9px; font-size: 10px; font-weight: 700; letter-spacing: .02em; }
+  .pill.t2v { background: rgba(255, 61, 129, .13); color: #ff7dab; }
+  .pill.i2v { background: rgba(139, 92, 246, .15); color: #b39bfa; }
   [data-theme="light"] .pill.t2v { color: #d62f6f; }
   [data-theme="light"] .pill.i2v { color: #7345e0; }
   .newslist { display: flex; flex-direction: column; gap: 7px; }
   .newsitem {
-    display: flex; gap: 11px; align-items: baseline;
-    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
-    padding: 12px 15px; text-decoration: none; color: var(--text);
-    transition: border-color .15s, transform .12s;
+    display: flex; gap: 12px; align-items: baseline;
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    padding: 12.5px 16px; text-decoration: none; color: var(--text);
+    transition: border-color .15s, transform .13s, box-shadow .15s;
+    animation: rise .4s cubic-bezier(.2, .7, .3, 1) both;
   }
-  .newsitem:hover { border-color: var(--border-h); transform: translateX(3px); }
-  .badge { flex-shrink: 0; font-size: 10.5px; font-weight: 800; border-radius: 6px; padding: 2.5px 8px; }
-  .badge.kr { background: rgba(255,77,141,.14); color: #ff6ba0; }
-  .badge.gl { background: rgba(139,92,246,.16); color: #a78bfa; }
+  .newsitem:hover { border-color: var(--border-h); transform: translateX(4px); box-shadow: var(--shadow-sm); }
+  .newsitem .nidx { flex: none; font-family: "Space Grotesk", sans-serif; font-size: 12px; font-weight: 700; color: var(--t3); width: 18px; }
+  .badge { flex-shrink: 0; font-size: 10px; font-weight: 800; border-radius: 7px; padding: 2.5px 8px; }
+  .badge.kr { background: rgba(255, 61, 129, .13); color: #ff7dab; }
+  .badge.gl { background: rgba(139, 92, 246, .15); color: #b39bfa; }
   [data-theme="light"] .badge.kr { color: #d62f6f; }
   [data-theme="light"] .badge.gl { color: #7345e0; }
-  .newsitem .ntitle { font-size: 13.5px; line-height: 1.45; flex: 1; font-weight: 500; }
-  .newsitem .nsrc { flex-shrink: 0; color: var(--t3); font-size: 11.5px; }
+  .newsitem .ntitle { font-size: 13.5px; line-height: 1.48; flex: 1; font-weight: 550; }
+  .newsitem .nsrc { flex-shrink: 0; color: var(--t3); font-size: 11px; }
   .ai-tip {
-    display: flex; align-items: center; gap: 9px; color: var(--t2); font-size: 12.5px;
-    background: var(--panel); border: 1px dashed var(--border-h); border-radius: 12px; padding: 12px 16px;
+    display: flex; align-items: center; gap: 10px; color: var(--t2); font-size: 12.5px;
+    background: var(--panel); border: 1px dashed var(--border-h); border-radius: 14px; padding: 13px 17px;
   }
   .ai-tip .ic { width: 15px; height: 15px; color: var(--gold); }
   .ai-tip b { color: var(--text); }
 
   /* ---------------- 링크 카드 (스레드 폴백) ---------------- */
-  .linkgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin: 14px 0 30px; }
+  .linkgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(164px, 1fr)); gap: 10px; margin: 14px 0 30px; }
   .linkcard {
     display: block; text-decoration: none; background: var(--card);
-    border: 1px solid var(--border); border-radius: 14px; padding: 16px 15px;
+    border: 1px solid var(--border); border-radius: 16px; padding: 16px 15px;
     color: var(--text); font-size: 13.5px; font-weight: 700; transition: all .15s;
   }
   .linkcard:hover { border-color: var(--brand); transform: translateY(-2px); }
   .linkcard small { display: block; color: var(--t3); font-weight: 400; margin-top: 6px; font-size: 11.5px; }
   .note { color: var(--t3); font-size: 12.5px; line-height: 1.65; }
 
-  /* ---------------- 상태 / 빈 화면 / 스켈레톤 ---------------- */
-  .status { padding: 56px 20px; text-align: center; color: var(--t2); font-size: 14px; display: none; }
-  .status.show { display: block; animation: fadein .2s ease; }
+  /* ---------------- 상태 / 스켈레톤 ---------------- */
+  .status { padding: 60px 20px; text-align: center; color: var(--t2); font-size: 14px; display: none; }
+  .status.show { display: block; animation: viewin .2s ease; }
   .status .bigic {
-    width: 52px; height: 52px; margin: 0 auto 14px; border-radius: 16px;
+    width: 56px; height: 56px; margin: 0 auto 15px; border-radius: 18px;
     background: var(--panel); border: 1px solid var(--border);
     display: grid; place-items: center; color: var(--t3);
   }
-  .status .bigic .ic { width: 22px; height: 22px; }
-  .status h4 { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
-  .status p { font-size: 12.5px; color: var(--t3); line-height: 1.6; max-width: 420px; margin: 0 auto; }
+  .status .bigic .ic { width: 23px; height: 23px; }
+  .status h4 { font-size: 15px; font-weight: 750; color: var(--text); margin-bottom: 6px; letter-spacing: -.2px; }
+  .status p { font-size: 12.5px; color: var(--t3); line-height: 1.65; max-width: 420px; margin: 0 auto; }
   .status button {
-    margin-top: 16px; background: var(--grad); border: none; border-radius: 10px;
-    padding: 9px 20px; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer;
+    margin-top: 17px; background: var(--grad); border: none; border-radius: 11px;
+    padding: 9.5px 22px; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer;
+    box-shadow: 0 4px 14px rgba(255, 61, 129, .3);
   }
   .status button:hover { opacity: .9; }
 
-  .sk { pointer-events: none; }
+  .sk { pointer-events: none; animation: none !important; }
   .sk-shimmer { position: relative; overflow: hidden; background: var(--skel1); }
   .sk-shimmer::after {
     content: ""; position: absolute; inset: 0;
@@ -441,63 +519,95 @@
   .grid.shorts .sk .thumb { aspect-ratio: 9/13.5; }
   .sk-line { height: 12px; border-radius: 6px; margin-bottom: 8px; }
   .sk-line.short { width: 55%; }
+  .fcard.sk { aspect-ratio: 16 / 10.5; }
 
   /* ---------------- 모달 ---------------- */
   #modal {
-    position: fixed; inset: 0; background: rgba(4,6,10,.86); backdrop-filter: blur(6px);
+    position: fixed; inset: 0; background: rgba(3, 4, 8, .88); backdrop-filter: blur(8px);
     display: none; align-items: center; justify-content: center; z-index: 100; padding: 24px;
   }
   #modal.open { display: flex; }
-  .modal-box { width: min(920px, 100%); animation: modalin .22s ease; }
+  .modal-box { width: min(940px, 100%); animation: modalin .25s cubic-bezier(.2, .7, .3, 1); }
   .modal-box.vertical { width: min(400px, 100%); }
-  @keyframes modalin { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: none; } }
+  @keyframes modalin { from { opacity: 0; transform: translateY(16px) scale(.97); } to { opacity: 1; transform: none; } }
   .modal-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
   .modal-head h3 { flex: 1; font-size: 14.5px; font-weight: 700; color: #f2f4fa; line-height: 1.4;
     display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
   .modal-head .iconbtn { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.14); color: #dfe4ee; }
-  .player { width: 100%; aspect-ratio: 16/9; border: none; border-radius: 16px; background: #000; box-shadow: 0 24px 64px rgba(0,0,0,.5); }
+  .player { width: 100%; aspect-ratio: 16/9; border: none; border-radius: 18px; background: #000; box-shadow: 0 28px 72px rgba(0,0,0,.55); }
   .modal-box.vertical .player { aspect-ratio: 9/16; }
   .modal-actions { display: flex; gap: 10px; margin-top: 13px; justify-content: flex-end; }
   .modal-actions a {
     display: inline-flex; align-items: center; gap: 7px;
     background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.15); color: #eef1f8;
-    border-radius: 10px; padding: 9px 16px; font-size: 13px; font-weight: 600; text-decoration: none;
+    border-radius: 11px; padding: 9px 16px; font-size: 13px; font-weight: 600; text-decoration: none;
   }
-  .modal-actions a:hover { background: rgba(255,255,255,.15); }
+  .modal-actions a:hover { background: rgba(255,255,255,.16); }
   .modal-actions .ic { width: 14px; height: 14px; }
 
   /* ---------------- 토스트 ---------------- */
   #toasts { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%); z-index: 120; display: flex; flex-direction: column; gap: 8px; align-items: center; }
   .toast {
     background: var(--panel2); color: var(--text); border: 1px solid var(--border-h);
-    border-radius: 12px; padding: 11px 18px; font-size: 13px; font-weight: 600;
+    border-radius: 13px; padding: 11px 18px; font-size: 13px; font-weight: 600;
     box-shadow: var(--shadow); display: flex; align-items: center; gap: 9px;
-    animation: toastin .25s ease;
+    animation: toastin .28s cubic-bezier(.2, .7, .3, 1);
   }
   .toast .ic { width: 15px; height: 15px; color: var(--brand); }
-  @keyframes toastin { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  @keyframes toastin { from { opacity: 0; transform: translateY(14px) scale(.96); } to { opacity: 1; transform: none; } }
   .toast.out { opacity: 0; transform: translateY(8px); transition: all .3s; }
 
-  footer {
-    max-width: 1560px; margin: 0 auto; padding: 26px 28px 34px;
-    border-top: 1px solid var(--border); color: var(--t3); font-size: 11.5px; line-height: 1.7;
-    display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
-  }
+  footer { padding: 24px 28px 30px; border-top: 1px solid var(--border); color: var(--t3); font-size: 11px; line-height: 1.7;
+    display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
   footer b { color: var(--t2); font-weight: 700; }
 
   /* ---------------- 반응형 ---------------- */
+  @media (max-width: 1180px) {
+    .featrow { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .fcard .ftitle { font-size: 13.5px; }
+    .fcard .fno { font-size: 36px; }
+  }
+  @media (max-width: 940px) {
+    .featrow { grid-template-columns: 1fr 1fr; }
+    .fcard:nth-child(3) { display: none; }
+  }
   @media (max-width: 860px) {
-    .topbar { padding: 10px 16px; gap: 10px; }
-    #today { display: none; }
-    .search { width: 100%; order: 10; }
-    .topbar .right { margin-left: auto; }
-    .tabs, .toolbar, main, footer { padding-left: 16px; padding-right: 16px; }
+    .app { display: block; }
+    aside {
+      position: fixed; top: auto; bottom: 0; left: 0; right: 0; width: 100%; height: auto;
+      flex-direction: row; padding: 7px 6px calc(7px + env(safe-area-inset-bottom));
+      border-right: none; border-top: 1px solid var(--border);
+      background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    }
+    .brand, .side-foot, .nav-label { display: none; }
+    .nav { flex-direction: row; margin: 0; width: 100%; gap: 0; }
+    .nav-item { flex: 1; flex-direction: column; gap: 4px; padding: 7px 2px; font-size: 9.5px; font-weight: 600; border-radius: 10px; }
+    .nav-item .ic { width: 19px; height: 19px; }
+    .nav-item.active::before { display: none; }
+    .nav-item.active { background: none; }
+    .nav-item.active span { color: var(--text); }
+    .topbar { padding: 11px 16px; gap: 10px; }
+    .brand-m { display: grid; }
+    .brand-m .logomark { width: 32px; height: 32px; border-radius: 10px; }
+    .brand-m .logomark .ic { width: 16px; height: 16px; }
+    .page-head p { display: none; }
+    .page-head h1 { font-size: 16px; }
+    .search { width: 100%; order: 10; height: 36px; }
+    .toolbar, main, footer { padding-left: 16px; padding-right: 16px; }
+    main { padding-bottom: 110px; }
+    footer { margin-bottom: 66px; }
+    .featrow { grid-template-columns: 1fr; }
+    .fcard:nth-child(2), .fcard:nth-child(3) { display: none; }
+    .fcard { aspect-ratio: 16/9.5; }
     .grid { grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); gap: 11px; }
     .grid.shorts { grid-template-columns: repeat(auto-fill, minmax(128px, 1fr)); }
     .postlist { grid-template-columns: 1fr; }
     .periods { margin-left: 0; }
-    .viewtools { margin-left: 0; width: 100%; }
     .title { font-size: 12.5px; min-height: 35px; }
+    .aurora i:nth-child(3) { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
   }
 </style>
 </head>
@@ -538,201 +648,198 @@
   </defs>
 </svg>
 
-<header>
-  <div class="topbar">
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="app">
+  <aside>
     <a class="brand" href="/">
       <span class="logomark"><svg class="ic"><use href="#i-logo"/></svg></span>
       <span>
-        <h1>Trend<em>Pulse</em></h1>
-        <small>SNS 트렌드 인텔리전스</small>
+        <b>Trend<em>Pulse</em></b>
+        <small>SNS TREND INTELLIGENCE</small>
       </span>
     </a>
-    <span id="today"></span>
-    <div class="right">
-      <form id="searchForm" class="search">
-        <svg class="ic"><use href="#i-search"/></svg>
-        <input id="searchInput" type="search" placeholder="유튜브 트렌드 검색 (예: AI 광고)" autocomplete="off">
-        <kbd>/</kbd>
-      </form>
-      <span id="updated"></span>
-      <button id="refreshBtn" class="iconbtn" title="데이터 새로고침" type="button"><svg class="ic"><use href="#i-refresh"/></svg></button>
-      <button id="themeBtn" class="iconbtn" title="테마 전환" type="button"><svg class="ic"><use href="#i-moon"/></svg></button>
+    <nav class="nav" id="tabs">
+      <span class="nav-label">플랫폼</span>
+      <button class="nav-item active" data-tab="youtube" type="button"><svg class="ic"><use href="#i-youtube"/></svg><span>유튜브</span></button>
+      <button class="nav-item" data-tab="shorts" type="button"><svg class="ic"><use href="#i-zap"/></svg><span>쇼츠</span></button>
+      <button class="nav-item" data-tab="reels" type="button"><svg class="ic"><use href="#i-instagram"/></svg><span>릴스</span></button>
+      <button class="nav-item" data-tab="tiktok" type="button"><svg class="ic"><use href="#i-tiktok"/></svg><span>틱톡</span></button>
+      <button class="nav-item" data-tab="x" type="button"><svg class="ic"><use href="#i-x"/></svg><span>X</span></button>
+      <button class="nav-item" data-tab="threads" type="button"><svg class="ic"><use href="#i-at"/></svg><span>스레드</span></button>
+      <span class="nav-label">인텔리전스</span>
+      <button class="nav-item" data-tab="ai" type="button"><svg class="ic"><use href="#i-sparkles"/></svg><span>AI 인사이트</span></button>
+    </nav>
+    <div class="side-foot">
+      <span class="ver"><i></i>LIVE · 1H CACHE</span>
+      <p>YouTube · Instagram · X · Threads · TikTok · Hugging Face · Google News 실시간 수집</p>
     </div>
-  </div>
-  <nav class="tabwrap">
-    <div class="tabs" id="tabs">
-      <button class="tab active" data-tab="youtube"><svg class="ic"><use href="#i-youtube"/></svg>유튜브</button>
-      <button class="tab" data-tab="shorts"><svg class="ic"><use href="#i-zap"/></svg>쇼츠</button>
-      <button class="tab" data-tab="ai"><svg class="ic"><use href="#i-sparkles"/></svg>AI 인사이트</button>
-      <button class="tab" data-tab="reels"><svg class="ic"><use href="#i-instagram"/></svg>릴스</button>
-      <button class="tab" data-tab="x"><svg class="ic"><use href="#i-x"/></svg>X</button>
-      <button class="tab" data-tab="threads"><svg class="ic"><use href="#i-at"/></svg>스레드</button>
-      <button class="tab" data-tab="tiktok"><svg class="ic"><use href="#i-tiktok"/></svg>틱톡</button>
-    </div>
-  </nav>
-</header>
+  </aside>
 
-<div class="toolbar" id="toolbar">
-  <div class="chips" id="chips"></div>
-  <div class="periods" id="periods">
-    <button class="period" data-period="day" type="button">오늘</button>
-    <button class="period active" data-period="week" type="button">이번 주</button>
-    <button class="period" data-period="month" type="button">이번 달</button>
-  </div>
-  <div class="sortmenu" id="vidSortMenu">
-    <button class="sorttoggle" type="button"><span class="lbl">정렬</span><span class="curlabel">조회수순</span><svg class="ic caret"><use href="#i-chevron"/></svg></button>
-    <div class="sortlist"></div>
+  <div class="shell">
+    <header class="topbar">
+      <span class="brand-m"><span class="logomark"><svg class="ic"><use href="#i-logo"/></svg></span></span>
+      <div class="page-head">
+        <h1 id="pageTitle">유튜브 트렌드</h1>
+        <p id="pageDesc"></p>
+      </div>
+      <div class="right">
+        <form id="searchForm" class="search">
+          <svg class="ic"><use href="#i-search"/></svg>
+          <input id="searchInput" type="search" placeholder="유튜브 트렌드 검색 (예: AI 광고)" autocomplete="off">
+          <kbd>/</kbd>
+        </form>
+        <span id="updated"></span>
+        <button id="refreshBtn" class="iconbtn" title="데이터 새로고침" type="button"><svg class="ic"><use href="#i-refresh"/></svg></button>
+        <button id="themeBtn" class="iconbtn" title="테마 전환" type="button"><svg class="ic"><use href="#i-moon"/></svg></button>
+      </div>
+    </header>
+
+    <div class="toolbar" id="toolbar">
+      <div class="chips" id="chips"></div>
+      <div class="periods" id="periods">
+        <button class="period" data-period="day" type="button">오늘</button>
+        <button class="period active" data-period="week" type="button">이번 주</button>
+        <button class="period" data-period="month" type="button">이번 달</button>
+      </div>
+      <div class="sortmenu" id="vidSortMenu">
+        <button class="sorttoggle" type="button"><span class="lbl">정렬</span><span class="curlabel">조회수순</span><svg class="ic caret"><use href="#i-chevron"/></svg></button>
+        <div class="sortlist"></div>
+      </div>
+    </div>
+
+    <main>
+      <!-- 유튜브 / 쇼츠 -->
+      <section id="videoView" class="view">
+        <div class="status" id="status"></div>
+        <div class="featrow" id="featRow"></div>
+        <div class="grid" id="grid"></div>
+      </section>
+
+      <!-- AI 인사이트 -->
+      <section id="aiView" class="view" style="display:none">
+        <div class="status" id="aiStatus"></div>
+        <div id="aiBody">
+          <div class="ai-section">
+            <span class="eyebrow">Hugging Face · New</span>
+            <h2><svg class="ic"><use href="#i-sparkles"/></svg>새로 나온 영상 생성 모델</h2>
+            <div class="modelrow" id="aiLatest"></div>
+          </div>
+          <div class="ai-section">
+            <span class="eyebrow">Hugging Face · Trending</span>
+            <h2><svg class="ic"><use href="#i-flame"/></svg>지금 뜨는 모델</h2>
+            <div class="modelrow" id="aiTrending"></div>
+          </div>
+          <div class="ai-section">
+            <span class="eyebrow">Google News · Latest</span>
+            <h2><svg class="ic"><use href="#i-news"/></svg>AI 영상 뉴스</h2>
+            <div class="newslist" id="aiNews"></div>
+          </div>
+          <div class="ai-tip"><svg class="ic"><use href="#i-zap"/></svg><span>인기 AI 영상은 <b>유튜브 탭 → 'AI' 카테고리</b>에서 조회수·좋아요순으로 볼 수 있어요.</span></div>
+        </div>
+      </section>
+
+      <!-- 릴스 -->
+      <section id="reelsView" class="view" style="display:none">
+        <div class="viewbar">
+          <span class="count" id="reelsCount"></span>
+          <span class="grow"></span>
+          <div class="sortmenu" id="reelsSortMenu">
+            <button class="sorttoggle" type="button"><span class="lbl">정렬</span><span class="curlabel">조회수순</span><svg class="ic caret"><use href="#i-chevron"/></svg></button>
+            <div class="sortlist"></div>
+          </div>
+          <button class="managebtn" data-panel="reelsManage" type="button"><svg class="ic"><use href="#i-users"/></svg>계정 관리</button>
+        </div>
+        <div class="manage" id="reelsManage">
+          <h3><svg class="ic"><use href="#i-users"/></svg>구독 계정</h3>
+          <div class="acc-chips" id="accChips"></div>
+          <div class="addbar">
+            <input id="accInput" type="text" placeholder="인스타그램 계정명 (예: runwayapp)">
+            <button id="accAdd" type="button"><svg class="ic"><use href="#i-plus"/></svg>추가</button>
+          </div>
+        </div>
+        <div class="status" id="reelsStatus"></div>
+        <div class="grid shorts" id="reelsGrid"></div>
+      </section>
+
+      <!-- X -->
+      <section id="xView" class="view" style="display:none">
+        <div class="viewbar">
+          <span class="count" id="xCount"></span>
+          <span class="grow"></span>
+          <div class="sortmenu" id="xSortMenu">
+            <button class="sorttoggle" type="button"><span class="lbl">정렬</span><span class="curlabel">좋아요순</span><svg class="ic caret"><use href="#i-chevron"/></svg></button>
+            <div class="sortlist"></div>
+          </div>
+          <button class="managebtn" data-panel="xManage" type="button"><svg class="ic"><use href="#i-users"/></svg>계정 관리</button>
+        </div>
+        <div class="manage" id="xManage">
+          <h3><svg class="ic"><use href="#i-users"/></svg>구독 계정</h3>
+          <div class="acc-chips" id="xChips"></div>
+          <div class="addbar">
+            <input id="xInput" type="text" placeholder="X(트위터) 계정명 (예: OpenAI)">
+            <button id="xAdd" type="button"><svg class="ic"><use href="#i-plus"/></svg>추가</button>
+          </div>
+        </div>
+        <div class="status" id="xStatus"></div>
+        <div class="postlist" id="xList"></div>
+      </section>
+
+      <!-- 스레드 -->
+      <section id="threadsView" class="view" style="display:none">
+        <div class="viewbar">
+          <span class="count" id="thCount"></span>
+          <span class="grow"></span>
+          <div class="sortmenu" id="thSortMenu">
+            <button class="sorttoggle" type="button"><span class="lbl">정렬</span><span class="curlabel">좋아요순</span><svg class="ic caret"><use href="#i-chevron"/></svg></button>
+            <div class="sortlist"></div>
+          </div>
+          <button class="managebtn" data-panel="thManage" type="button"><svg class="ic"><use href="#i-users"/></svg>계정 관리</button>
+        </div>
+        <div class="manage" id="thManage">
+          <h3><svg class="ic"><use href="#i-users"/></svg>구독 계정</h3>
+          <div class="acc-chips" id="thChips"></div>
+          <div class="addbar">
+            <input id="thInput" type="text" placeholder="스레드 계정명 (예: openai)">
+            <button id="thAdd" type="button"><svg class="ic"><use href="#i-plus"/></svg>추가</button>
+          </div>
+        </div>
+        <div class="status" id="thStatus"></div>
+        <div class="postlist" id="thList"></div>
+        <div id="thFallback" style="display:none"></div>
+      </section>
+
+      <!-- 틱톡 -->
+      <section id="tiktokView" class="view" style="display:none">
+        <div class="viewbar">
+          <span class="count" id="ttCount"></span>
+          <span class="grow"></span>
+          <div class="sortmenu" id="ttSortMenu">
+            <button class="sorttoggle" type="button"><span class="lbl">정렬</span><span class="curlabel">조회수순</span><svg class="ic caret"><use href="#i-chevron"/></svg></button>
+            <div class="sortlist"></div>
+          </div>
+          <button class="managebtn" data-panel="ttManage" type="button"><svg class="ic"><use href="#i-users"/></svg>계정 관리</button>
+        </div>
+        <div class="manage" id="ttManage">
+          <h3><svg class="ic"><use href="#i-users"/></svg>구독 계정</h3>
+          <div class="acc-chips" id="ttChips"></div>
+          <div class="addbar">
+            <input id="ttInput" type="text" placeholder="틱톡 계정명 (@ 없이, 예: khaby.lame)">
+            <button id="ttAdd" type="button"><svg class="ic"><use href="#i-plus"/></svg>추가</button>
+          </div>
+        </div>
+        <div class="status" id="ttStatus"></div>
+        <div class="grid shorts" id="ttGrid"></div>
+      </section>
+    </main>
+
+    <footer>
+      <span><b>TrendPulse</b> — 유튜브 · 쇼츠 · 릴스 · X · 스레드 · 틱톡 · AI 영상 트렌드를 한눈에</span>
+      <span>데이터 출처: YouTube · Instagram · X · Threads · TikTok · Hugging Face · Google News (1시간 캐시)</span>
+    </footer>
   </div>
 </div>
-
-<main>
-  <!-- 유튜브 / 쇼츠 -->
-  <section id="videoView" class="view">
-    <div class="status" id="status"></div>
-    <div class="grid" id="grid"></div>
-  </section>
-
-  <!-- AI 인사이트 -->
-  <section id="aiView" class="view" style="display:none">
-    <div class="status" id="aiStatus"></div>
-    <div id="aiBody">
-      <div class="ai-section">
-        <h2><svg class="ic"><use href="#i-sparkles"/></svg>새로 나온 영상 생성 모델</h2>
-        <p>Hugging Face · 최신 등록순</p>
-        <div class="modelrow" id="aiLatest"></div>
-      </div>
-      <div class="ai-section">
-        <h2><svg class="ic"><use href="#i-flame"/></svg>지금 뜨는 모델</h2>
-        <p>Hugging Face · 트렌딩 스코어순</p>
-        <div class="modelrow" id="aiTrending"></div>
-      </div>
-      <div class="ai-section">
-        <h2><svg class="ic"><use href="#i-news"/></svg>AI 영상 뉴스</h2>
-        <p>구글 뉴스 · 국내외 최신순</p>
-        <div class="newslist" id="aiNews"></div>
-      </div>
-      <div class="ai-tip"><svg class="ic"><use href="#i-zap"/></svg><span>인기 AI 영상은 <b>유튜브 탭 → 'AI' 카테고리</b>에서 조회수·좋아요순으로 볼 수 있어요.</span></div>
-    </div>
-  </section>
-
-  <!-- 릴스 -->
-  <section id="reelsView" class="view" style="display:none">
-    <div class="viewhead">
-      <div>
-        <h2><svg class="ic"><use href="#i-instagram"/></svg>인기 릴스</h2>
-        <p class="viewdesc">구독한 인스타그램 계정들의 최신 릴스를 지표 순으로 정렬합니다.</p>
-      </div>
-      <div class="viewtools">
-        <span class="count" id="reelsCount"></span>
-        <div class="sortmenu" id="reelsSortMenu">
-          <button class="sorttoggle" type="button"><span class="lbl">정렬</span><span class="curlabel">조회수순</span><svg class="ic caret"><use href="#i-chevron"/></svg></button>
-          <div class="sortlist"></div>
-        </div>
-        <button class="managebtn" data-panel="reelsManage" type="button"><svg class="ic"><use href="#i-users"/></svg>계정 관리</button>
-      </div>
-    </div>
-    <div class="manage" id="reelsManage">
-      <h3><svg class="ic"><use href="#i-users"/></svg>구독 계정</h3>
-      <div class="acc-chips" id="accChips"></div>
-      <div class="addbar">
-        <input id="accInput" type="text" placeholder="인스타그램 계정명 (예: runwayapp)">
-        <button id="accAdd" type="button"><svg class="ic"><use href="#i-plus"/></svg>추가</button>
-      </div>
-    </div>
-    <div class="status" id="reelsStatus"></div>
-    <div class="grid shorts" id="reelsGrid"></div>
-  </section>
-
-  <!-- X -->
-  <section id="xView" class="view" style="display:none">
-    <div class="viewhead">
-      <div>
-        <h2><svg class="ic"><use href="#i-x"/></svg>X 바이럴 포스트</h2>
-        <p class="viewdesc">구독 계정들의 최신 포스트를 좋아요·댓글·리포스트 지표와 함께 수집합니다.</p>
-      </div>
-      <div class="viewtools">
-        <span class="count" id="xCount"></span>
-        <div class="sortmenu" id="xSortMenu">
-          <button class="sorttoggle" type="button"><span class="lbl">정렬</span><span class="curlabel">좋아요순</span><svg class="ic caret"><use href="#i-chevron"/></svg></button>
-          <div class="sortlist"></div>
-        </div>
-        <button class="managebtn" data-panel="xManage" type="button"><svg class="ic"><use href="#i-users"/></svg>계정 관리</button>
-      </div>
-    </div>
-    <div class="manage" id="xManage">
-      <h3><svg class="ic"><use href="#i-users"/></svg>구독 계정</h3>
-      <div class="acc-chips" id="xChips"></div>
-      <div class="addbar">
-        <input id="xInput" type="text" placeholder="X(트위터) 계정명 (예: OpenAI)">
-        <button id="xAdd" type="button"><svg class="ic"><use href="#i-plus"/></svg>추가</button>
-      </div>
-    </div>
-    <div class="status" id="xStatus"></div>
-    <div class="postlist" id="xList"></div>
-  </section>
-
-  <!-- 스레드 -->
-  <section id="threadsView" class="view" style="display:none">
-    <div class="viewhead">
-      <div>
-        <h2><svg class="ic"><use href="#i-at"/></svg>스레드 인기 글</h2>
-        <p class="viewdesc">로그인 없이 실시간 조회를 시도하며, 조회가 막히면 계정 바로가기로 안내합니다.</p>
-      </div>
-      <div class="viewtools">
-        <span class="count" id="thCount"></span>
-        <div class="sortmenu" id="thSortMenu">
-          <button class="sorttoggle" type="button"><span class="lbl">정렬</span><span class="curlabel">좋아요순</span><svg class="ic caret"><use href="#i-chevron"/></svg></button>
-          <div class="sortlist"></div>
-        </div>
-        <button class="managebtn" data-panel="thManage" type="button"><svg class="ic"><use href="#i-users"/></svg>계정 관리</button>
-      </div>
-    </div>
-    <div class="manage" id="thManage">
-      <h3><svg class="ic"><use href="#i-users"/></svg>구독 계정</h3>
-      <div class="acc-chips" id="thChips"></div>
-      <div class="addbar">
-        <input id="thInput" type="text" placeholder="스레드 계정명 (예: openai)">
-        <button id="thAdd" type="button"><svg class="ic"><use href="#i-plus"/></svg>추가</button>
-      </div>
-    </div>
-    <div class="status" id="thStatus"></div>
-    <div class="postlist" id="thList"></div>
-    <div id="thFallback" style="display:none"></div>
-  </section>
-
-  <!-- 틱톡 -->
-  <section id="tiktokView" class="view" style="display:none">
-    <div class="viewhead">
-      <div>
-        <h2><svg class="ic"><use href="#i-tiktok"/></svg>틱톡 인기 영상</h2>
-        <p class="viewdesc">실시간 인기 피드(한국)와 구독 계정들의 최신 영상을 함께 모아 보여줍니다.</p>
-      </div>
-      <div class="viewtools">
-        <span class="count" id="ttCount"></span>
-        <div class="sortmenu" id="ttSortMenu">
-          <button class="sorttoggle" type="button"><span class="lbl">정렬</span><span class="curlabel">조회수순</span><svg class="ic caret"><use href="#i-chevron"/></svg></button>
-          <div class="sortlist"></div>
-        </div>
-        <button class="managebtn" data-panel="ttManage" type="button"><svg class="ic"><use href="#i-users"/></svg>계정 관리</button>
-      </div>
-    </div>
-    <div class="manage" id="ttManage">
-      <h3><svg class="ic"><use href="#i-users"/></svg>구독 계정</h3>
-      <div class="acc-chips" id="ttChips"></div>
-      <div class="addbar">
-        <input id="ttInput" type="text" placeholder="틱톡 계정명 (@ 없이, 예: khaby.lame)">
-        <button id="ttAdd" type="button"><svg class="ic"><use href="#i-plus"/></svg>추가</button>
-      </div>
-    </div>
-    <div class="status" id="ttStatus"></div>
-    <div class="grid shorts" id="ttGrid"></div>
-  </section>
-</main>
-
-<footer>
-  <span><b>TrendPulse</b> · 유튜브 · 쇼츠 · 릴스 · X · 스레드 · 틱톡 · AI 영상 트렌드를 한눈에</span>
-  <span>데이터 출처: YouTube · Instagram · X · Threads · TikTok · Hugging Face · Google News (1시간 캐시)</span>
-</footer>
 
 <div id="modal">
   <div class="modal-box" id="modalBox">
@@ -756,6 +863,15 @@ const ic = (name, cls = '') => `<svg class="ic ${cls}"><use href="#i-${name}"/><
 
 const state = { tab: 'youtube', category: '전체', period: 'week', categories: ['전체'], search: '' };
 const VIEWS = { youtube: 'videoView', shorts: 'videoView', ai: 'aiView', reels: 'reelsView', x: 'xView', threads: 'threadsView', tiktok: 'tiktokView' };
+const TAB_META = {
+  youtube: { title: '유튜브 트렌드', desc: '카테고리 × 기간별 인기 영상을 조회수·좋아요순으로' },
+  shorts:  { title: '쇼츠 트렌드', desc: '짧은 영상 인기 순위를 카테고리 × 기간별로' },
+  ai:      { title: 'AI 인사이트', desc: '영상 생성 모델과 국내외 AI 영상 뉴스' },
+  reels:   { title: '릴스', desc: '구독 계정들의 인기 릴스를 지표순으로' },
+  x:       { title: 'X 바이럴', desc: '구독 계정 포스트를 참여 지표와 함께' },
+  threads: { title: '스레드', desc: '인기 글 실시간 조회 · 차단 시 계정 바로가기' },
+  tiktok:  { title: '틱톡', desc: '실시간 인기 피드(한국) + 구독 계정 영상' },
+};
 
 /* ---------- 포맷터 ---------- */
 const fmt = n => {
@@ -777,10 +893,14 @@ function timeAgoStr(str) {
   const t = Date.parse(str);
   return isNaN(t) ? '' : timeAgo(t / 1000);
 }
+const stagger = (el, i) => { el.style.animationDelay = Math.min(i * 28, 320) + 'ms'; return el; };
 
-/* ---------- 헤더: 날짜 / 테마 / 새로고침 상태 ---------- */
-$('today').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
-
+/* ---------- 페이지 헤더 / 테마 / 로딩 상태 ---------- */
+function setPageHead(tab) {
+  const m = TAB_META[tab];
+  $('pageTitle').textContent = state.search && (tab === 'youtube' || tab === 'shorts') ? `검색: ${state.search}` : m.title;
+  $('pageDesc').textContent = m.desc + ' · ' + new Date().toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' });
+}
 const themeBtn = $('themeBtn');
 function applyTheme(t) {
   document.documentElement.dataset.theme = t;
@@ -836,6 +956,15 @@ function showSkeleton(grid, n, post = false) {
         <div class="meta"><div class="sk-line sk-shimmer"></div><div class="sk-line sk-shimmer short"></div></div>`;
     }
     grid.appendChild(el);
+  }
+}
+function showFeatSkeleton() {
+  const row = $('featRow');
+  row.innerHTML = '';
+  for (let i = 0; i < 3; i++) {
+    const el = document.createElement('div');
+    el.className = 'fcard sk sk-shimmer';
+    row.appendChild(el);
   }
 }
 
@@ -896,7 +1025,7 @@ function renderChips() {
     b.onclick = () => {
       state.category = c; state.search = '';
       $('searchInput').value = '';
-      renderChips(); loadVideos();
+      renderChips(); setPageHead(state.tab); loadVideos();
     };
     box.appendChild(b);
   });
@@ -915,7 +1044,8 @@ async function loadVideos(force = false) {
   const wantLikes = vidState.sort === 'likes';
   hideStatus(status);
   grid.className = 'grid' + (state.tab === 'shorts' ? ' shorts' : '');
-  showSkeleton(grid, state.tab === 'shorts' ? 14 : 10);
+  if (state.tab === 'youtube') { showFeatSkeleton(); showSkeleton(grid, 8); }
+  else { $('featRow').innerHTML = ''; showSkeleton(grid, 14); }
   const q = new URLSearchParams({
     category: state.category, period: state.period,
     shorts: state.tab === 'shorts' ? '1' : '0', force: force ? '1' : '0',
@@ -930,28 +1060,59 @@ async function loadVideos(force = false) {
     vidData = data.videos || [];
     vidHasLikes = wantLikes;
     if (!vidData.length) {
-      grid.innerHTML = '';
+      grid.innerHTML = ''; $('featRow').innerHTML = '';
       showStatus(status, { icon: 'inbox', title: '결과가 없습니다', desc: '다른 카테고리나 기간을 선택해 보세요.', retry: () => loadVideos(true) });
       return;
     }
     renderVideos();
   } catch (e) {
     if (seq !== loadSeq) return;
-    grid.innerHTML = '';
+    grid.innerHTML = ''; $('featRow').innerHTML = '';
     showStatus(status, { icon: 'wifi-off', title: '불러오기에 실패했습니다', desc: '네트워크 연결을 확인한 뒤 다시 시도해 주세요.', retry: () => loadVideos(true) });
   } finally { endLoad(); }
 }
 function renderVideos() {
   const grid = $('grid');
+  const featRow = $('featRow');
   grid.className = 'grid' + (state.tab === 'shorts' ? ' shorts' : '');
   const f = vidState.sort;
   const sorted = vidData.slice().sort((a, b) => (b[f] || 0) - (a[f] || 0));
+  const useFeat = state.tab === 'youtube' && sorted.length >= 6;
+  featRow.innerHTML = '';
   grid.innerHTML = '';
-  sorted.forEach((v, i) => grid.appendChild(videoCard(v, i + 1)));
+  if (useFeat) {
+    sorted.slice(0, 3).forEach((v, i) => featRow.appendChild(stagger(featCard(v, i + 1), i)));
+    sorted.slice(3).forEach((v, i) => grid.appendChild(stagger(videoCard(v, i + 4), i)));
+  } else {
+    sorted.forEach((v, i) => grid.appendChild(stagger(videoCard(v, i + 1), i)));
+  }
 }
 function rankBadge(rank) {
   const cls = rank <= 3 ? ` r${rank}` : '';
   return `<span class="rank${cls}">${rank}위</span>`;
+}
+function featCard(v, rank) {
+  const el = document.createElement('article');
+  el.className = 'fcard n' + rank;
+  const likeStr = v.likes ? `<span class="stat${vidState.sort === 'likes' ? ' hot' : ''}">${ic('thumb')}${fmt(v.likes)}</span>` : '';
+  el.innerHTML = `
+    <img class="fthumb" loading="lazy" src="${v.thumbnail}" alt="">
+    <div class="fscrim"></div>
+    <span class="fno">${rank}</span>
+    ${v.length ? `<span class="len">${v.length}</span>` : ''}
+    <div class="fbody">
+      <h3 class="ftitle"></h3>
+      <div class="fmeta"><span class="chn"></span><span>·</span><span>${v.published || ''}</span></div>
+      <div class="fstats">
+        <span class="stat${vidState.sort === 'views' ? ' hot' : ''}">${ic('eye')}${fmt(v.views)}회</span>
+        ${likeStr}
+      </div>
+    </div>
+    <div class="playov"><span>${ic('play', 'fill')}</span></div>`;
+  el.querySelector('.ftitle').textContent = v.title;
+  el.querySelector('.chn').textContent = v.channel;
+  el.onclick = () => openPlayer(v, false);
+  return el;
 }
 function videoCard(v, rank) {
   const el = document.createElement('article');
@@ -1017,14 +1178,15 @@ async function loadAI(force = false) {
     renderModels('aiTrending', data.models.trending);
     const nl = $('aiNews');
     nl.innerHTML = '';
-    (data.news || []).slice(0, 20).forEach(n => {
+    (data.news || []).slice(0, 20).forEach((n, i) => {
       const a = document.createElement('a');
       a.className = 'newsitem'; a.href = n.link; a.target = '_blank'; a.rel = 'noopener';
-      a.innerHTML = `<span class="badge ${n.region === '국내' ? 'kr' : 'gl'}">${n.region}</span>
+      a.innerHTML = `<span class="nidx">${String(i + 1).padStart(2, '0')}</span>
+        <span class="badge ${n.region === '국내' ? 'kr' : 'gl'}">${n.region}</span>
         <span class="ntitle"></span><span class="nsrc"></span>`;
       a.querySelector('.ntitle').textContent = n.title;
       a.querySelector('.nsrc').textContent = (n.source ? n.source + ' · ' : '') + timeAgo(n.ts);
-      nl.appendChild(a);
+      nl.appendChild(stagger(a, i));
     });
   } catch (e) {
     showStatus(status, { icon: 'wifi-off', title: '불러오기에 실패했습니다', desc: '네트워크 연결을 확인한 뒤 다시 시도해 주세요.', retry: () => loadAI(true) });
@@ -1033,7 +1195,7 @@ async function loadAI(force = false) {
 function renderModels(elId, models) {
   const box = $(elId);
   box.innerHTML = '';
-  (models || []).forEach(m => {
+  (models || []).forEach((m, i) => {
     const a = document.createElement('a');
     a.className = 'modelcard';
     a.href = 'https://huggingface.co/' + m.id;
@@ -1044,10 +1206,10 @@ function renderModels(elId, models) {
         <span class="pill ${t2v ? 't2v' : 'i2v'}">${t2v ? '텍스트→영상' : '이미지→영상'}</span>
         <span class="stat">${ic('heart')}${fmt(m.likes)}</span>
         <span class="stat">${ic('download')}${fmt(m.downloads)}</span>
-        <span>${m.createdAt ? m.createdAt.slice(0, 10) : ''}</span>
+        <span class="num">${m.createdAt ? m.createdAt.slice(0, 10) : ''}</span>
       </div>`;
     a.querySelector('.mid').textContent = m.id;
-    box.appendChild(a);
+    box.appendChild(stagger(a, i));
   });
 }
 
@@ -1108,13 +1270,13 @@ function renderReels() {
   const label = { views: '조회수', likes: '좋아요', comments: '댓글' };
   const sorted = reelsData.slice().sort((a, b) => (b[f] || 0) - (a[f] || 0));
   grid.innerHTML = '';
-  sorted.forEach((r, i) => grid.appendChild(shortCard(r, i + 1, f)));
+  sorted.forEach((r, i) => grid.appendChild(stagger(shortCard(r, i + 1, f), i)));
   $('reelsCount').textContent = `${label[f]} 기준 · ${sorted.length}개`;
 }
 
 /* ---------- 계정 칩 / 추가·삭제 (공용) ---------- */
 const AVATAR_COLORS = [
-  'linear-gradient(135deg,#ff4d8d,#c2308f)', 'linear-gradient(135deg,#8b5cf6,#5f3dc4)',
+  'linear-gradient(135deg,#ff3d81,#c2308f)', 'linear-gradient(135deg,#8b5cf6,#5f3dc4)',
   'linear-gradient(135deg,#ff8a3c,#e8590c)', 'linear-gradient(135deg,#20c997,#0ca678)',
   'linear-gradient(135deg,#4dabf7,#1971c2)', 'linear-gradient(135deg,#f06595,#a61e4d)',
   'linear-gradient(135deg,#94d82d,#5c940d)', 'linear-gradient(135deg,#ffd43b,#f08c00)',
@@ -1166,8 +1328,8 @@ wireAddBar('tiktok', 'ttInput', 'ttAdd');
 
 /* ---------- X · 스레드 ---------- */
 const social = {
-  x: { data: [], loaded: false, sort: 'likes', opts: ['likes', 'replies', 'reposts', 'views'], repostField: 'retweets', repostLabel: '리포스트순' },
-  threads: { data: [], loaded: false, sort: 'likes', opts: ['likes', 'replies', 'reposts'], repostField: 'reposts', repostLabel: '리포스트순' },
+  x: { data: [], loaded: false, sort: 'likes', opts: ['likes', 'replies', 'reposts', 'views'], repostField: 'retweets' },
+  threads: { data: [], loaded: false, sort: 'likes', opts: ['likes', 'replies', 'reposts'], repostField: 'reposts' },
 };
 const SORT_OPTS = {
   likes: { label: '좋아요순', icon: 'heart' },
@@ -1187,6 +1349,7 @@ function postCard(p, rank, kind) {
   const name = p.name || p.account;
   const when = kind === 'x' ? timeAgoStr(p.createdAt) : timeAgo(p.createdAt);
   el.innerHTML = `
+    <span class="goic">${ic('external')}</span>
     <div class="phead">
       <span class="avatar" style="--av:${avatarColor(p.account)}">${(name[0] || '?').toUpperCase()}</span>
       <div class="pwho"><b></b><span>@${p.account}${when ? ' · ' + when : ''}</span></div>
@@ -1211,7 +1374,7 @@ function renderSocial(kind) {
   const f = sortField(kind);
   const sorted = social[kind].data.slice().sort((a, b) => (b[f] || 0) - (a[f] || 0));
   listEl.innerHTML = '';
-  sorted.forEach((p, i) => listEl.appendChild(postCard(p, i + 1, kind)));
+  sorted.forEach((p, i) => listEl.appendChild(stagger(postCard(p, i + 1, kind), i)));
   cntEl.textContent = sorted.length ? `${sorted.length}개 포스트` : '';
 }
 async function loadSocial(kind, force = false) {
@@ -1292,7 +1455,7 @@ function renderTikTok() {
   const label = { views: '조회수', likes: '좋아요', comments: '댓글' };
   const sorted = tiktokData.slice().sort((a, b) => (b[f] || 0) - (a[f] || 0));
   grid.innerHTML = '';
-  sorted.forEach((t, i) => grid.appendChild(shortCard(t, i + 1, f)));
+  sorted.forEach((t, i) => grid.appendChild(stagger(shortCard(t, i + 1, f), i)));
   $('ttCount').textContent = `${label[f]} 기준 · ${sorted.length}개`;
 }
 
@@ -1324,11 +1487,12 @@ initFoldMenu('thSortMenu',
 /* ---------- 탭 / 기간 / 검색 / 새로고침 ---------- */
 function switchTab(tab) {
   state.tab = tab;
-  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  document.querySelectorAll('.nav-item').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
   const isVideo = tab === 'youtube' || tab === 'shorts';
   $('toolbar').style.display = isVideo ? 'flex' : 'none';
   Object.values(VIEWS).forEach(id => $(id).style.display = 'none');
   $(VIEWS[tab]).style.display = 'block';
+  setPageHead(tab);
   if (isVideo) loadVideos();
   else if (tab === 'ai') loadAI();
   else if (tab === 'reels') loadReels();
@@ -1337,7 +1501,7 @@ function switchTab(tab) {
   else if (tab === 'tiktok') loadTikTok();
 }
 $('tabs').onclick = e => {
-  const btn = e.target.closest('.tab');
+  const btn = e.target.closest('.nav-item');
   if (btn) switchTab(btn.dataset.tab);
 };
 $('periods').onclick = e => {
@@ -1352,8 +1516,8 @@ $('searchForm').addEventListener('submit', e => {
   const kw = $('searchInput').value.trim();
   state.search = kw;
   if (state.tab !== 'youtube' && state.tab !== 'shorts') switchTab('youtube');
+  else { renderChips(); setPageHead(state.tab); loadVideos(); return; }
   renderChips();
-  loadVideos();
 });
 $('refreshBtn').onclick = () => {
   if (state.tab === 'ai') loadAI(true);
@@ -1364,6 +1528,7 @@ $('refreshBtn').onclick = () => {
   else loadVideos(true);
 };
 
+setPageHead('youtube');
 initCategories().then(() => loadVideos());
 </script>
 </body>

@@ -1,0 +1,16 @@
+# Render 블루프린트 — render.com에서 New + → Blueprint → 이 저장소 선택만 하면 배포됩니다.
+services:
+  - type: web
+    name: trendpulse
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python server.py
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.4"
+      - key: CACHE_TTL
+        value: "3600"
+      - key: TIKTOK_REGION
+        value: "KR"
