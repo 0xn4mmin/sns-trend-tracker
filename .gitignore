@@ -4,6 +4,9 @@ x_accounts.json
 threads_accounts.json
 tiktok_accounts.json
 
+# 로그인 세션 쿠키 — 절대 커밋 금지 (비밀번호에 준하는 민감정보)
+sessions.json
+
 __pycache__/
 *.pyc
 .DS_Store

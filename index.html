@@ -545,6 +545,66 @@
   .modal-actions a:hover { background: rgba(255,255,255,.16); }
   .modal-actions .ic { width: 14px; height: 14px; }
 
+  /* ---------------- 세션 설정 모달 ---------------- */
+  #sessionModal {
+    position: fixed; inset: 0; background: rgba(3, 4, 8, .78); backdrop-filter: blur(8px);
+    display: none; align-items: center; justify-content: center; z-index: 110; padding: 24px;
+  }
+  #sessionModal.open { display: flex; }
+  .sheet {
+    width: min(560px, 100%); max-height: 88vh; overflow-y: auto;
+    background: var(--panel2); border: 1px solid var(--border); border-radius: 22px;
+    padding: 24px; box-shadow: var(--shadow); animation: modalin .25s cubic-bezier(.2,.7,.3,1);
+  }
+  .sheet-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+  .sheet-head h3 { font-size: 17px; font-weight: 800; letter-spacing: -.3px; display: flex; align-items: center; gap: 8px; }
+  .sheet-head h3 .ic { width: 18px; height: 18px; color: var(--brand); }
+  .sheet-head p { font-size: 12.5px; color: var(--t3); margin-top: 6px; line-height: 1.55; }
+  .sheet-head .iconbtn { margin-left: auto; flex: none; }
+  .sheet-note {
+    display: flex; gap: 10px; align-items: flex-start; font-size: 12px; line-height: 1.6; color: var(--t2);
+    background: var(--input); border: 1px solid var(--border); border-radius: 13px; padding: 12px 14px; margin-bottom: 18px;
+  }
+  .sheet-note .ic { width: 15px; height: 15px; color: #34d399; flex: none; margin-top: 1px; }
+  .sheet-note b { color: var(--text); font-weight: 700; }
+  .srow { margin-bottom: 15px; }
+  .srow-head { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+  .srow-head .plat { font-size: 13.5px; font-weight: 700; }
+  .srow-head .dom { font-size: 11px; color: var(--t3); }
+  .srow-head .badge-on {
+    margin-left: auto; display: inline-flex; align-items: center; gap: 5px;
+    font-size: 10.5px; font-weight: 700; color: #34d399;
+    background: rgba(52,211,153,.12); border-radius: 999px; padding: 3px 9px;
+  }
+  .srow-head .badge-on i { width: 5px; height: 5px; border-radius: 50%; background: #34d399; font-style: normal; }
+  .srow-head .badge-off { margin-left: auto; font-size: 10.5px; color: var(--t3); }
+  .srow-in { display: flex; gap: 8px; }
+  .srow-in input {
+    flex: 1; min-width: 0; background: var(--input); border: 1px solid var(--border); border-radius: 11px;
+    padding: 10px 13px; color: var(--text); font-size: 12.5px; font-family: "Space Grotesk", monospace;
+  }
+  .srow-in input:focus { outline: none; border-color: var(--brand2); box-shadow: 0 0 0 3px var(--ring); }
+  .srow-in input::placeholder { color: var(--t3); font-family: inherit; }
+  .srow-in button {
+    flex: none; background: var(--grad); border: none; border-radius: 11px; padding: 0 16px;
+    color: #fff; font-size: 13px; font-weight: 700; cursor: pointer;
+  }
+  .srow-in button:hover { opacity: .9; }
+  .srow-in button.clearbtn { background: var(--input); color: var(--t2); border: 1px solid var(--border); }
+  .sheet-help { margin-top: 8px; border-top: 1px solid var(--border); padding-top: 14px; }
+  .help-toggle {
+    display: flex; align-items: center; gap: 7px; background: none; border: none; cursor: pointer;
+    color: var(--t2); font-size: 13px; font-weight: 600; padding: 0;
+  }
+  .help-toggle .ic { width: 14px; height: 14px; transition: transform .18s; }
+  .sheet-help.open .help-toggle .ic { transform: rotate(180deg); }
+  .help-body { display: none; margin-top: 12px; }
+  .sheet-help.open .help-body { display: block; animation: viewin .2s ease; }
+  .help-body ol { margin: 0 0 12px 18px; color: var(--t2); font-size: 12.5px; line-height: 1.75; }
+  .help-body b { color: var(--text); font-weight: 700; }
+  .help-body .warn { font-size: 12px; color: #f0a; opacity: .85; line-height: 1.6; }
+  [data-theme="dark"] .help-body .warn { color: #ff8fb3; }
+
   /* ---------------- 토스트 ---------------- */
   #toasts { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%); z-index: 120; display: flex; flex-direction: column; gap: 8px; align-items: center; }
   .toast {
@@ -645,6 +705,9 @@
     <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21v-1a7 7 0 0 1 14 0v1"/><path d="M17 4.5a4 4 0 0 1 0 7"/><path d="M19.5 14.5a7 7 0 0 1 2.5 5.5v1"/></symbol>
     <symbol id="i-wifi-off" viewBox="0 0 24 24"><path d="M2 2l20 20"/><path d="M5 12.5a10 10 0 0 1 3-2M2 8.8a15 15 0 0 1 4.2-2.7M12 20h.01M8.5 16.4a5 5 0 0 1 5.5-.6M16 12.7a10 10 0 0 1 3 2.3M17.8 6.1A15 15 0 0 1 22 8.8"/></symbol>
     <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.5 5.1 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.5-6.9A2 2 0 0 0 16.7 4H7.3a2 2 0 0 0-1.8 1.1z"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.7 12.3 8.3-8.3M16 5l3 3M14 7l3 3"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
   </defs>
 </svg>
 
@@ -692,6 +755,7 @@
         </form>
         <span id="updated"></span>
         <button id="refreshBtn" class="iconbtn" title="데이터 새로고침" type="button"><svg class="ic"><use href="#i-refresh"/></svg></button>
+        <button id="sessionBtn" class="iconbtn" title="로그인 세션 설정" type="button"><svg class="ic"><use href="#i-key"/></svg></button>
         <button id="themeBtn" class="iconbtn" title="테마 전환" type="button"><svg class="ic"><use href="#i-moon"/></svg></button>
       </div>
     </header>
@@ -854,6 +918,34 @@
   </div>
 </div>
 
+<div id="sessionModal">
+  <div class="sheet">
+    <div class="sheet-head">
+      <div>
+        <h3><svg class="ic"><use href="#i-key"/></svg>로그인 세션 수집</h3>
+        <p>본인 브라우저의 세션 쿠키를 넣으면 인스타·X·스레드의 차단을 우회해 안정적으로 수집합니다.</p>
+      </div>
+      <button id="sessionClose" class="iconbtn" type="button"><svg class="ic"><use href="#i-close"/></svg></button>
+    </div>
+    <div class="sheet-note">
+      <svg class="ic"><use href="#i-shield"/></svg>
+      <span>쿠키는 <b>해당 플랫폼의 서버로만</b> 전송되며, 저장 값은 화면에 다시 표시되지 않습니다. 공용/배포 서버라면 브라우저 대신 <b>환경변수</b>로 넣는 것을 권장합니다.</span>
+    </div>
+    <div id="sessionRows"></div>
+    <div class="sheet-help" id="sessionHelp">
+      <button type="button" class="help-toggle"><svg class="ic"><use href="#i-chevron"/></svg>쿠키는 어디서 얻나요?</button>
+      <div class="help-body">
+        <ol>
+          <li>PC 브라우저에서 해당 플랫폼(instagram.com 등)에 <b>로그인</b>합니다.</li>
+          <li><b>F12</b> → <b>Network</b> 탭 → 아무 요청이나 클릭 → <b>Request Headers</b>의 <b>cookie</b> 값을 전체 복사합니다.</li>
+          <li>복사한 값을 아래 칸에 붙여넣고 저장하세요. (스레드는 인스타그램 쿠키를 공유하므로 비워두면 자동 적용됩니다.)</li>
+        </ol>
+        <p class="warn">⚠️ 세션 쿠키는 비밀번호와 같습니다. 본인 계정에서만, 신뢰하는 기기에서만 사용하세요. 각 플랫폼 약관도 확인하시기 바랍니다.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="toasts"></div>
 
 <script>
@@ -909,6 +1001,82 @@ function applyTheme(t) {
 }
 applyTheme(localStorage.getItem('tp-theme') || 'dark');
 themeBtn.onclick = () => applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+
+/* ---------- 로그인 세션 설정 ---------- */
+const SESSION_PLATFORMS = [
+  { key: 'instagram', label: 'Instagram', dom: 'instagram.com · 릴스', ph: 'sessionid=…; ds_user_id=…; csrftoken=…' },
+  { key: 'x', label: 'X (트위터)', dom: 'x.com', ph: 'auth_token=…; ct0=…' },
+  { key: 'threads', label: 'Threads', dom: 'threads.com · 비우면 IG 쿠키 공유', ph: '(선택) 비워두면 Instagram 세션 사용' },
+  { key: 'youtube', label: 'YouTube', dom: 'youtube.com · 선택', ph: '(선택) 좋아요·연령제한 보강용' },
+];
+let sessionAdminReq = false;
+function adminToken() { return localStorage.getItem('tp-admin') || ''; }
+async function loadSessionStatus() {
+  try {
+    const d = await (await fetch('/api/sessions')).json();
+    sessionAdminReq = d.adminRequired;
+    return d.configured || {};
+  } catch (e) { return {}; }
+}
+function renderSessionRows(configured) {
+  const box = $('sessionRows');
+  box.innerHTML = '';
+  SESSION_PLATFORMS.forEach(p => {
+    const on = !!configured[p.key];
+    const row = document.createElement('div');
+    row.className = 'srow';
+    row.innerHTML = `
+      <div class="srow-head">
+        <span class="plat">${p.label}</span><span class="dom">${p.dom}</span>
+        ${on ? '<span class="badge-on"><i></i>연결됨</span>' : '<span class="badge-off">미설정</span>'}
+      </div>
+      <div class="srow-in">
+        <input type="password" autocomplete="off" placeholder="${p.ph}">
+        <button type="button" class="savebtn">저장</button>
+        ${on ? '<button type="button" class="clearbtn">삭제</button>' : ''}
+      </div>`;
+    const input = row.querySelector('input');
+    row.querySelector('.savebtn').onclick = () => saveSession(p.key, input.value.trim());
+    const clr = row.querySelector('.clearbtn');
+    if (clr) clr.onclick = () => saveSession(p.key, '');
+    box.appendChild(row);
+  });
+}
+async function saveSession(key, value) {
+  if (sessionAdminReq && !adminToken()) {
+    const t = prompt('관리자 토큰(ADMIN_TOKEN)을 입력하세요');
+    if (t) localStorage.setItem('tp-admin', t); else return;
+  }
+  try {
+    const res = await fetch('/api/sessions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Token': adminToken() },
+      body: JSON.stringify({ [key]: value })
+    });
+    if (res.status === 403) { localStorage.removeItem('tp-admin'); toast('관리자 토큰이 올바르지 않습니다', 'close'); return; }
+    if (!res.ok) { const e = await res.json().catch(()=>({})); toast(e.error || '저장 실패', 'close'); return; }
+    const d = await res.json();
+    renderSessionRows(d.configured);
+    toast(value ? '세션 저장됨 — 이제 인증 수집을 사용합니다' : '세션 삭제됨');
+    // 해당 탭 캐시 무효화 후 재수집
+    reelsLoaded = social.x.loaded = social.threads.loaded = false;
+    if (['reels','x','threads'].includes(state.tab) || key === 'instagram') {
+      const kind = state.tab;
+      if (kind === 'reels') loadReels(true);
+      else if (kind === 'x') loadSocial('x', true);
+      else if (kind === 'threads') loadSocial('threads', true);
+    }
+  } catch (e) { toast('요청에 실패했습니다', 'close'); }
+}
+async function openSessionModal() {
+  const configured = await loadSessionStatus();
+  renderSessionRows(configured);
+  $('sessionModal').classList.add('open');
+}
+$('sessionBtn').onclick = openSessionModal;
+$('sessionClose').onclick = () => $('sessionModal').classList.remove('open');
+$('sessionModal').onclick = e => { if (e.target.id === 'sessionModal') $('sessionModal').classList.remove('open'); };
+$('sessionHelp').querySelector('.help-toggle').onclick = () => $('sessionHelp').classList.toggle('open');
 
 let inflight = 0;
 function beginLoad() { inflight++; $('refreshBtn').classList.add('loading'); }
@@ -1154,7 +1322,7 @@ function closePlayer() {
 $('closeModal').onclick = closePlayer;
 $('modal').onclick = e => { if (e.target.id === 'modal') closePlayer(); };
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closePlayer();
+  if (e.key === 'Escape') { closePlayer(); $('sessionModal').classList.remove('open'); }
   if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
     e.preventDefault(); $('searchInput').focus();
   }
