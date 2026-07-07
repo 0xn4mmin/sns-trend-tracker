@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrendPulse — 모든 SNS 트렌드를 한눈에</title>
+<meta name="description" content="유튜브·쇼츠·릴스·틱톡·X·스레드 인기 콘텐츠와 AI 영상 트렌드를 실시간으로 모아보는 트렌드 인텔리전스 대시보드">
+<meta property="og:title" content="TrendPulse — 모든 SNS 트렌드를 한눈에">
+<meta property="og:description" content="유튜브·쇼츠·릴스·틱톡·X·스레드 인기 콘텐츠와 AI 영상 트렌드를 한 화면에서.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff4d8d'/%3E%3Cstop offset='1' stop-color='%238b5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='24' fill='url(%23g)'/%3E%3Cpath d='M22 62l16-16 12 12 24-24' stroke='white' stroke-width='9' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M58 34h16v16' stroke='white' stroke-width='9' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #0a0c11;
+    --bg2: #0d1017;
+    --panel: #12151d;
+    --panel2: #161a24;
+    --card: #151924;
+    --card-h: #1a1f2d;
+    --border: #222939;
+    --border-h: #35405a;
+    --text: #eef1f8;
+    --t2: #a7b0c3;
+    --t3: #667089;
+    --brand: #ff4d8d;
+    --brand2: #8b5cf6;
+    --grad: linear-gradient(135deg, #ff4d8d, #8b5cf6);
+    --gold: #ffd166;
+    --shadow: 0 10px 32px rgba(0,0,0,.45);
+    --shadow-sm: 0 4px 14px rgba(0,0,0,.3);
+    --glass: rgba(10,12,17,.82);
+    --skel1: #1a1f2c;
+    --skel2: #232a3c;
+    --input: #10131b;
+    --hot: #ff4d8d;
+    --glow1: rgba(255,77,141,.09);
+    --glow2: rgba(139,92,246,.10);
+  }
+  [data-theme="light"] {
+    color-scheme: light;
+    --bg: #f3f5fa;
+    --bg2: #eef1f8;
+    --panel: #ffffff;
+    --panel2: #ffffff;
+    --card: #ffffff;
+    --card-h: #ffffff;
+    --border: #e3e8f2;
+    --border-h: #c6cfe2;
+    --text: #171d2b;
+    --t2: #4e586e;
+    --t3: #8892a6;
+    --shadow: 0 12px 32px rgba(23,29,43,.10);
+    --shadow-sm: 0 3px 12px rgba(23,29,43,.07);
+    --glass: rgba(243,245,250,.85);
+    --skel1: #e8ecf4;
+    --skel2: #f4f6fb;
+    --input: #f3f5fa;
+    --glow1: rgba(255,77,141,.06);
+    --glow2: rgba(139,92,246,.07);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(720px 380px at 12% -8%, var(--glow1), transparent 65%),
+      radial-gradient(720px 380px at 88% -8%, var(--glow2), transparent 65%);
+  }
+  button { font-family: inherit; }
+  input { font-family: inherit; }
+  ::selection { background: rgba(255,77,141,.32); }
+  :focus-visible { outline: 2px solid var(--brand2); outline-offset: 2px; border-radius: 6px; }
+
+  .ic { width: 16px; height: 16px; flex: none; stroke: currentColor; stroke-width: 2;
+        fill: none; stroke-linecap: round; stroke-linejoin: round; vertical-align: -3px; }
+  .ic.fill { fill: currentColor; stroke: none; }
+
+  /* ---------------- 헤더 ---------------- */
+  header {
+    position: sticky; top: 0; z-index: 60;
+    background: var(--glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .topbar {
+    max-width: 1560px; margin: 0 auto; padding: 12px 28px;
+    display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+  }
+  .brand { display: flex; align-items: center; gap: 11px; text-decoration: none; color: inherit; }
+  .logomark {
+    width: 36px; height: 36px; border-radius: 11px; background: var(--grad);
+    display: grid; place-items: center; color: #fff;
+    box-shadow: 0 4px 16px rgba(255,77,141,.35);
+  }
+  .logomark .ic { width: 19px; height: 19px; stroke-width: 2.4; }
+  .brand h1 { font-size: 19.5px; font-weight: 800; letter-spacing: -.4px; line-height: 1.1; }
+  .brand h1 em { font-style: normal; background: var(--grad); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .brand small { display: block; font-size: 11px; font-weight: 500; color: var(--t3); letter-spacing: .1px; margin-top: 2px; }
+  #today { color: var(--t3); font-size: 12.5px; font-weight: 500; padding-left: 4px; }
+
+  .topbar .right { margin-left: auto; display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+  .search {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--input); border: 1px solid var(--border); border-radius: 11px;
+    padding: 0 13px; height: 38px; width: 290px; transition: border-color .15s, box-shadow .15s;
+  }
+  .search:focus-within { border-color: var(--brand2); box-shadow: 0 0 0 3px rgba(139,92,246,.16); }
+  .search .ic { color: var(--t3); }
+  .search input { flex: 1; background: none; border: none; color: var(--text); font-size: 13.5px; min-width: 0; }
+  .search input:focus { outline: none; }
+  .search input::placeholder { color: var(--t3); }
+  .search kbd {
+    font-family: inherit; font-size: 10.5px; color: var(--t3);
+    border: 1px solid var(--border); border-radius: 5px; padding: 1px 6px;
+  }
+  .iconbtn {
+    width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center;
+    background: var(--input); border: 1px solid var(--border); color: var(--t2);
+    cursor: pointer; transition: border-color .15s, color .15s, transform .1s;
+  }
+  .iconbtn:hover { border-color: var(--border-h); color: var(--text); }
+  .iconbtn:active { transform: scale(.94); }
+  .iconbtn .ic { width: 17px; height: 17px; }
+  #refreshBtn.loading .ic { animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #updated { color: var(--t3); font-size: 11.5px; white-space: nowrap; display: flex; align-items: center; gap: 5px; }
+  #updated .ic { width: 12px; height: 12px; }
+
+  /* ---------------- 플랫폼 탭 ---------------- */
+  .tabwrap { border-top: 1px solid transparent; }
+  .tabs {
+    max-width: 1560px; margin: 0 auto; padding: 0 24px 10px;
+    display: flex; gap: 7px; overflow-x: auto; scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    display: flex; align-items: center; gap: 7px; white-space: nowrap;
+    padding: 8px 15px; border-radius: 999px; font-size: 13.5px; font-weight: 600;
+    background: transparent; border: 1px solid transparent; color: var(--t2); cursor: pointer;
+    transition: background .15s, color .15s, border-color .15s;
+  }
+  .tab:hover { background: var(--panel2); color: var(--text); }
+  .tab.active { background: var(--card); border-color: var(--border-h); color: var(--text); box-shadow: var(--shadow-sm); font-weight: 700; }
+  .tab .ic { width: 15px; height: 15px; }
+  .tab.active[data-tab="youtube"] .ic, .tab.active[data-tab="shorts"] .ic { color: #ff3b3b; }
+  .tab.active[data-tab="ai"] .ic { color: #a78bfa; }
+  .tab.active[data-tab="reels"] .ic { color: #e1447c; }
+  .tab.active[data-tab="tiktok"] .ic { color: #25d0c8; }
+  .tab.active[data-tab="x"] .ic, .tab.active[data-tab="threads"] .ic { color: var(--text); }
+
+  /* ---------------- 툴바 (유튜브/쇼츠) ---------------- */
+  .toolbar {
+    max-width: 1560px; margin: 0 auto; padding: 16px 28px 0;
+    display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+  }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip {
+    padding: 7px 14px; border-radius: 999px; font-size: 13px; font-weight: 500;
+    background: var(--panel); border: 1px solid var(--border); color: var(--t2);
+    cursor: pointer; white-space: nowrap; transition: all .15s;
+  }
+  .chip:hover { border-color: var(--border-h); color: var(--text); }
+  .chip.active {
+    background: var(--grad); border-color: transparent; color: #fff; font-weight: 700;
+    box-shadow: 0 3px 12px rgba(255,77,141,.32);
+  }
+  .periods {
+    display: flex; gap: 3px; margin-left: auto;
+    background: var(--panel); border: 1px solid var(--border); border-radius: 11px; padding: 3px;
+  }
+  .period {
+    padding: 6px 13px; border-radius: 8px; background: transparent; border: none;
+    color: var(--t2); font-size: 12.5px; font-weight: 500; cursor: pointer; transition: all .15s;
+  }
+  .period:hover { color: var(--text); }
+  .period.active { background: var(--card-h); color: var(--text); font-weight: 700; box-shadow: var(--shadow-sm); }
+  [data-theme="dark"] .period.active { background: #262e42; }
+
+  /* ---------------- 정렬 드롭다운 ---------------- */
+  .sortmenu { position: relative; }
+  .sorttoggle {
+    display: flex; align-items: center; gap: 7px;
+    background: var(--panel); border: 1px solid var(--border); color: var(--text);
+    border-radius: 11px; padding: 8px 13px; font-size: 12.5px; font-weight: 600; cursor: pointer;
+    transition: border-color .15s;
+  }
+  .sorttoggle:hover { border-color: var(--border-h); }
+  .sorttoggle .lbl { color: var(--t3); font-weight: 500; }
+  .sorttoggle .caret { width: 13px; height: 13px; color: var(--t3); transition: transform .18s; }
+  .sortmenu.open .caret { transform: rotate(180deg); }
+  .sortlist {
+    position: absolute; top: calc(100% + 7px); right: 0; z-index: 45;
+    background: var(--panel2); border: 1px solid var(--border); border-radius: 13px; padding: 5px;
+    min-width: 176px; box-shadow: var(--shadow);
+    opacity: 0; transform: translateY(-5px) scale(.98); pointer-events: none;
+    transition: opacity .14s, transform .14s;
+  }
+  .sortmenu.open .sortlist { opacity: 1; transform: none; pointer-events: auto; }
+  .sortlist button {
+    display: flex; width: 100%; align-items: center; gap: 9px;
+    background: transparent; border: none; color: var(--text);
+    padding: 9px 11px; border-radius: 9px; font-size: 13px; cursor: pointer; text-align: left;
+  }
+  .sortlist button:hover { background: var(--card-h); }
+  [data-theme="dark"] .sortlist button:hover { background: #1e2433; }
+  .sortlist button .ic { width: 14px; height: 14px; color: var(--t2); }
+  .sortlist button.sel { color: var(--brand); font-weight: 700; }
+  .sortlist button.sel .ic { color: var(--brand); }
+  .sortlist button .check { margin-left: auto; opacity: 0; width: 14px; height: 14px; }
+  .sortlist button.sel .check { opacity: 1; }
+
+  /* ---------------- 본문 공통 ---------------- */
+  main { max-width: 1560px; margin: 0 auto; padding: 20px 28px 70px; }
+  .view { animation: fadein .22s ease; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+
+  .viewhead { display: flex; align-items: flex-end; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
+  .viewhead h2 { font-size: 17px; font-weight: 800; letter-spacing: -.3px; display: flex; align-items: center; gap: 8px; }
+  .viewhead h2 .ic { width: 18px; height: 18px; color: var(--brand); }
+  .viewdesc { color: var(--t3); font-size: 12.5px; margin-top: 5px; line-height: 1.55; }
+  .viewtools { margin-left: auto; display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+  .count { color: var(--t3); font-size: 12px; white-space: nowrap; }
+
+  .managebtn {
+    display: flex; align-items: center; gap: 7px;
+    background: var(--panel); border: 1px solid var(--border); color: var(--t2);
+    border-radius: 11px; padding: 8px 13px; font-size: 12.5px; font-weight: 600; cursor: pointer;
+    transition: all .15s;
+  }
+  .managebtn:hover, .managebtn.on { border-color: var(--border-h); color: var(--text); }
+  .managebtn .ic { width: 14px; height: 14px; }
+
+  .manage {
+    display: none; background: var(--panel); border: 1px solid var(--border);
+    border-radius: 16px; padding: 16px 18px; margin-bottom: 18px;
+  }
+  .manage.open { display: block; animation: fadein .18s ease; }
+  .manage h3 { font-size: 13px; font-weight: 700; color: var(--t2); margin-bottom: 11px; display: flex; align-items: center; gap: 7px; }
+  .manage h3 .ic { width: 14px; height: 14px; }
+  .acc-chips { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 13px; }
+  .acc-chip {
+    display: inline-flex; gap: 7px; align-items: center;
+    background: var(--card); border: 1px solid var(--border); border-radius: 999px;
+    padding: 5px 7px 5px 13px; font-size: 12.5px; font-weight: 500; color: var(--text);
+  }
+  .acc-chip b { font-weight: 600; }
+  .acc-chip button {
+    background: var(--input); border: none; color: var(--t3); border-radius: 50%;
+    width: 19px; height: 19px; cursor: pointer; display: grid; place-items: center; transition: all .12s;
+  }
+  .acc-chip button:hover { color: #fff; background: var(--brand); }
+  .acc-chip button .ic { width: 10px; height: 10px; stroke-width: 2.5; }
+  .addbar { display: flex; gap: 8px; max-width: 560px; }
+  .addbar input {
+    flex: 1; background: var(--input); border: 1px solid var(--border); border-radius: 11px;
+    padding: 10px 14px; color: var(--text); font-size: 13.5px; transition: border-color .15s, box-shadow .15s;
+  }
+  .addbar input:focus { outline: none; border-color: var(--brand2); box-shadow: 0 0 0 3px rgba(139,92,246,.16); }
+  .addbar input::placeholder { color: var(--t3); }
+  .addbar button {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--grad); border: none; border-radius: 11px; padding: 10px 17px;
+    color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; transition: opacity .15s, transform .1s;
+  }
+  .addbar button:hover { opacity: .9; }
+  .addbar button:active { transform: scale(.96); }
+  .addbar button .ic { width: 14px; height: 14px; stroke-width: 2.5; }
+
+  /* ---------------- 카드 그리드 ---------------- */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(252px, 1fr)); gap: 16px; }
+  .grid.shorts { grid-template-columns: repeat(auto-fill, minmax(172px, 1fr)); }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    overflow: hidden; cursor: pointer; position: relative;
+    transition: transform .16s ease, border-color .16s, box-shadow .16s;
+  }
+  .card:hover { transform: translateY(-4px); border-color: var(--border-h); box-shadow: var(--shadow); }
+  .thumbwrap { position: relative; overflow: hidden; background: #0a0c11; }
+  .thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; transition: transform .3s ease; }
+  .grid.shorts .thumb { aspect-ratio: 9/13.5; }
+  .card:hover .thumb { transform: scale(1.045); }
+  .playov {
+    position: absolute; inset: 0; display: grid; place-items: center;
+    background: rgba(6,8,12,.34); opacity: 0; transition: opacity .18s;
+  }
+  .card:hover .playov { opacity: 1; }
+  .playov span {
+    width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center;
+    background: rgba(255,255,255,.94); color: #10131b; box-shadow: 0 6px 20px rgba(0,0,0,.4);
+  }
+  .playov .ic { width: 19px; height: 19px; margin-left: 2px; }
+  .rank {
+    position: absolute; top: 9px; left: 9px; z-index: 2;
+    background: rgba(8,10,15,.78); backdrop-filter: blur(4px); color: #e8ecf5;
+    font-weight: 800; font-size: 11.5px; padding: 3px 9px; border-radius: 8px; letter-spacing: -.2px;
+  }
+  .rank.r1 { background: linear-gradient(135deg,#ffd76a,#ff9636); color: #3d2400; }
+  .rank.r2 { background: linear-gradient(135deg,#eef1f7,#b9c3d6); color: #2b3243; }
+  .rank.r3 { background: linear-gradient(135deg,#f2b58a,#c97e4a); color: #3a2008; }
+  .len {
+    position: absolute; right: 8px; bottom: 8px; z-index: 2;
+    background: rgba(8,10,15,.82); color: #fff; font-size: 10.5px; font-weight: 600;
+    padding: 2px 7px; border-radius: 6px;
+  }
+  .meta { padding: 12px 13px 13px; }
+  .title {
+    font-size: 13.5px; font-weight: 650; line-height: 1.4; letter-spacing: -.1px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    min-height: 38px;
+  }
+  .sub { margin-top: 7px; color: var(--t3); font-size: 11.5px; display: flex; align-items: center; gap: 6px; min-width: 0; }
+  .sub .chn { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--t2); font-weight: 500; }
+  .sub .dot { color: var(--t3); flex: none; }
+  .stats { margin-top: 9px; display: flex; flex-wrap: wrap; gap: 5px 13px; font-size: 12px; color: var(--t2); }
+  .stat { display: inline-flex; align-items: center; gap: 4.5px; font-weight: 500; }
+  .stat .ic { width: 13px; height: 13px; color: var(--t3); }
+  .stat.hot { color: var(--hot); font-weight: 700; }
+  .stat.hot .ic { color: var(--hot); }
+
+  /* ---------------- 포스트 카드 (X·스레드) ---------------- */
+  .postlist { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 14px; }
+  .postcard {
+    display: flex; flex-direction: column; background: var(--card);
+    border: 1px solid var(--border); border-radius: 16px; padding: 16px 17px; cursor: pointer;
+    transition: transform .16s, border-color .16s, box-shadow .16s;
+  }
+  .postcard:hover { transform: translateY(-3px); border-color: var(--border-h); box-shadow: var(--shadow); }
+  .phead { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .avatar {
+    width: 36px; height: 36px; border-radius: 50%; flex: none;
+    display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 14.5px;
+    background: var(--av, var(--grad));
+  }
+  .pwho { min-width: 0; line-height: 1.3; }
+  .pwho b { display: block; font-size: 13.5px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pwho span { font-size: 11.5px; color: var(--t3); }
+  .prank {
+    margin-left: auto; flex: none; background: var(--input); color: var(--t2);
+    font-weight: 800; font-size: 11px; padding: 3px 9px; border-radius: 8px;
+  }
+  .prank.top { background: var(--grad); color: #fff; }
+  .ptext {
+    font-size: 13.5px; line-height: 1.55; white-space: pre-wrap; word-break: break-word;
+    display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .pmedia { margin-top: 11px; border-radius: 12px; width: 100%; max-height: 240px; object-fit: cover; background: #0a0c11; }
+  .pstats {
+    display: flex; gap: 15px; margin-top: 13px; padding-top: 12px;
+    border-top: 1px solid var(--border); font-size: 12px; color: var(--t2);
+  }
+  .pstats .stat b { font-weight: 700; color: var(--text); }
+  .pstats .stat.hot b { color: var(--hot); }
+
+  /* ---------------- AI 탭 ---------------- */
+  .ai-section { margin-bottom: 36px; }
+  .ai-section > h2 { font-size: 16px; font-weight: 800; letter-spacing: -.3px; display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .ai-section > h2 .ic { width: 17px; height: 17px; color: var(--brand2); }
+  .ai-section > p { color: var(--t3); font-size: 12px; margin-bottom: 13px; }
+  .modelrow { display: grid; grid-template-columns: repeat(auto-fill, minmax(248px, 1fr)); gap: 11px; }
+  .modelcard {
+    display: block; text-decoration: none; background: var(--card);
+    border: 1px solid var(--border); border-radius: 14px; padding: 14px 15px; color: var(--text);
+    transition: transform .15s, border-color .15s, box-shadow .15s;
+  }
+  .modelcard:hover { transform: translateY(-2px); border-color: var(--border-h); box-shadow: var(--shadow-sm); }
+  .modelcard .mid { font-size: 13px; font-weight: 700; word-break: break-all; line-height: 1.4; letter-spacing: -.1px; }
+  .modelcard .msub { margin-top: 9px; display: flex; gap: 6px 11px; align-items: center; font-size: 11.5px; color: var(--t3); flex-wrap: wrap; }
+  .modelcard .msub .stat .ic { width: 12px; height: 12px; }
+  .pill { border-radius: 999px; padding: 2.5px 9px; font-size: 10.5px; font-weight: 700; letter-spacing: .1px; }
+  .pill.t2v { background: rgba(255,77,141,.14); color: #ff6ba0; }
+  .pill.i2v { background: rgba(139,92,246,.16); color: #a78bfa; }
+  [data-theme="light"] .pill.t2v { color: #d62f6f; }
+  [data-theme="light"] .pill.i2v { color: #7345e0; }
+  .newslist { display: flex; flex-direction: column; gap: 7px; }
+  .newsitem {
+    display: flex; gap: 11px; align-items: baseline;
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 12px 15px; text-decoration: none; color: var(--text);
+    transition: border-color .15s, transform .12s;
+  }
+  .newsitem:hover { border-color: var(--border-h); transform: translateX(3px); }
+  .badge { flex-shrink: 0; font-size: 10.5px; font-weight: 800; border-radius: 6px; padding: 2.5px 8px; }
+  .badge.kr { background: rgba(255,77,141,.14); color: #ff6ba0; }
+  .badge.gl { background: rgba(139,92,246,.16); color: #a78bfa; }
+  [data-theme="light"] .badge.kr { color: #d62f6f; }
+  [data-theme="light"] .badge.gl { color: #7345e0; }
+  .newsitem .ntitle { font-size: 13.5px; line-height: 1.45; flex: 1; font-weight: 500; }
+  .newsitem .nsrc { flex-shrink: 0; color: var(--t3); font-size: 11.5px; }
+  .ai-tip {
+    display: flex; align-items: center; gap: 9px; color: var(--t2); font-size: 12.5px;
+    background: var(--panel); border: 1px dashed var(--border-h); border-radius: 12px; padding: 12px 16px;
+  }
+  .ai-tip .ic { width: 15px; height: 15px; color: var(--gold); }
+  .ai-tip b { color: var(--text); }
+
+  /* ---------------- 링크 카드 (스레드 폴백) ---------------- */
+  .linkgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin: 14px 0 30px; }
+  .linkcard {
+    display: block; text-decoration: none; background: var(--card);
+    border: 1px solid var(--border); border-radius: 14px; padding: 16px 15px;
+    color: var(--text); font-size: 13.5px; font-weight: 700; transition: all .15s;
+  }
+  .linkcard:hover { border-color: var(--brand); transform: translateY(-2px); }
+  .linkcard small { display: block; color: var(--t3); font-weight: 400; margin-top: 6px; font-size: 11.5px; }
+  .note { color: var(--t3); font-size: 12.5px; line-height: 1.65; }
+
+  /* ---------------- 상태 / 빈 화면 / 스켈레톤 ---------------- */
+  .status { padding: 56px 20px; text-align: center; color: var(--t2); font-size: 14px; display: none; }
+  .status.show { display: block; animation: fadein .2s ease; }
+  .status .bigic {
+    width: 52px; height: 52px; margin: 0 auto 14px; border-radius: 16px;
+    background: var(--panel); border: 1px solid var(--border);
+    display: grid; place-items: center; color: var(--t3);
+  }
+  .status .bigic .ic { width: 22px; height: 22px; }
+  .status h4 { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .status p { font-size: 12.5px; color: var(--t3); line-height: 1.6; max-width: 420px; margin: 0 auto; }
+  .status button {
+    margin-top: 16px; background: var(--grad); border: none; border-radius: 10px;
+    padding: 9px 20px; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer;
+  }
+  .status button:hover { opacity: .9; }
+
+  .sk { pointer-events: none; }
+  .sk-shimmer { position: relative; overflow: hidden; background: var(--skel1); }
+  .sk-shimmer::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(100deg, transparent 30%, var(--skel2) 50%, transparent 70%);
+    animation: shimmer 1.5s infinite;
+  }
+  @keyframes shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+  .sk .thumb { aspect-ratio: 16/9; }
+  .grid.shorts .sk .thumb { aspect-ratio: 9/13.5; }
+  .sk-line { height: 12px; border-radius: 6px; margin-bottom: 8px; }
+  .sk-line.short { width: 55%; }
+
+  /* ---------------- 모달 ---------------- */
+  #modal {
+    position: fixed; inset: 0; background: rgba(4,6,10,.86); backdrop-filter: blur(6px);
+    display: none; align-items: center; justify-content: center; z-index: 100; padding: 24px;
+  }
+  #modal.open { display: flex; }
+  .modal-box { width: min(920px, 100%); animation: modalin .22s ease; }
+  .modal-box.vertical { width: min(400px, 100%); }
+  @keyframes modalin { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: none; } }
+  .modal-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .modal-head h3 { flex: 1; font-size: 14.5px; font-weight: 700; color: #f2f4fa; line-height: 1.4;
+    display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+  .modal-head .iconbtn { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.14); color: #dfe4ee; }
+  .player { width: 100%; aspect-ratio: 16/9; border: none; border-radius: 16px; background: #000; box-shadow: 0 24px 64px rgba(0,0,0,.5); }
+  .modal-box.vertical .player { aspect-ratio: 9/16; }
+  .modal-actions { display: flex; gap: 10px; margin-top: 13px; justify-content: flex-end; }
+  .modal-actions a {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.15); color: #eef1f8;
+    border-radius: 10px; padding: 9px 16px; font-size: 13px; font-weight: 600; text-decoration: none;
+  }
+  .modal-actions a:hover { background: rgba(255,255,255,.15); }
+  .modal-actions .ic { width: 14px; height: 14px; }
+
+  /* ---------------- 토스트 ---------------- */
+  #toasts { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%); z-index: 120; display: flex; flex-direction: column; gap: 8px; align-items: center; }
+  .toast {
+    background: var(--panel2); color: var(--text); border: 1px solid var(--border-h);
+    border-radius: 12px; padding: 11px 18px; font-size: 13px; font-weight: 600;
+    box-shadow: var(--shadow); display: flex; align-items: center; gap: 9px;
+    animation: toastin .25s ease;
+  }
+  .toast .ic { width: 15px; height: 15px; color: var(--brand); }
+  @keyframes toastin { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  .toast.out { opacity: 0; transform: translateY(8px); transition: all .3s; }
+
+  footer {
+    max-width: 1560px; margin: 0 auto; padding: 26px 28px 34px;
+    border-top: 1px solid var(--border); color: var(--t3); font-size: 11.5px; line-height: 1.7;
+    display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  }
+  footer b { color: var(--t2); font-weight: 700; }
+
+  /* ---------------- 반응형 ---------------- */
+  @media (max-width: 860px) {
+    .topbar { padding: 10px 16px; gap: 10px; }
+    #today { display: none; }
+    .search { width: 100%; order: 10; }
+    .topbar .right { margin-left: auto; }
+    .tabs, .toolbar, main, footer { padding-left: 16px; padding-right: 16px; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); gap: 11px; }
+    .grid.shorts { grid-template-columns: repeat(auto-fill, minmax(128px, 1fr)); }
+    .postlist { grid-template-columns: 1fr; }
+    .periods { margin-left: 0; }
+    .viewtools { margin-left: 0; width: 100%; }
+    .title { font-size: 12.5px; min-height: 35px; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-logo" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol>
+    <symbol id="i-youtube" viewBox="0 0 24 24"><path d="M22.5 12s0-3.8-.5-5.6a2.9 2.9 0 0 0-2-2C18.2 4 12 4 12 4s-6.2 0-8 .4a2.9 2.9 0 0 0-2 2C1.5 8.2 1.5 12 1.5 12s0 3.8.5 5.6a2.9 2.9 0 0 0 2 2c1.8.4 8 .4 8 .4s6.2 0 8-.4a2.9 2.9 0 0 0 2-2c.5-1.8.5-5.6.5-5.6z"/><path d="M10 15.2V8.8L15.8 12 10 15.2z"/></symbol>
+    <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 3 14h8l-1 8 10-12h-8l1-8z"/></symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/><path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15z"/></symbol>
+    <symbol id="i-instagram" viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.6" cy="6.4" r=".6" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M4 4l16 16M20 4L4 20"/></symbol>
+    <symbol id="i-at" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"/></symbol>
+    <symbol id="i-tiktok" viewBox="0 0 24 24"><path d="M9 12a4.5 4.5 0 1 0 4.5 4.5V3c.5 2.6 2.3 4.6 5.5 5"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21.2l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/></symbol>
+    <symbol id="i-comment" viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-8.4 8.4 8.5 8.5 0 0 1-3.8-.9L3 21l2-5.2a8.4 8.4 0 1 1 16-4.3z"/></symbol>
+    <symbol id="i-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></symbol>
+    <symbol id="i-thumb" viewBox="0 0 24 24"><path d="M7 10v12"/><path d="M15 5.9 14 10h5.8a2 2 0 0 1 1.9 2.6l-2.3 7a2 2 0 0 1-1.9 1.4H7V10l4.7-7a2.4 2.4 0 0 1 3.3 2.9z"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-flame" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1.1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></symbol>
+    <symbol id="i-news" viewBox="0 0 24 24"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-4 0V9"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8V6z"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21v-1a7 7 0 0 1 14 0v1"/><path d="M17 4.5a4 4 0 0 1 0 7"/><path d="M19.5 14.5a7 7 0 0 1 2.5 5.5v1"/></symbol>
+    <symbol id="i-wifi-off" viewBox="0 0 24 24"><path d="M2 2l20 20"/><path d="M5 12.5a10 10 0 0 1 3-2M2 8.8a15 15 0 0 1 4.2-2.7M12 20h.01M8.5 16.4a5 5 0 0 1 5.5-.6M16 12.7a10 10 0 0 1 3 2.3M17.8 6.1A15 15 0 0 1 22 8.8"/></symbol>
+    <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.5 5.1 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.5-6.9A2 2 0 0 0 16.7 4H7.3a2 2 0 0 0-1.8 1.1z"/></symbol>
+  </defs>
+</svg>
+
+<header>
+  <div class="topbar">
+    <a class="brand" href="/">
+      <span class="logomark"><svg class="ic"><use href="#i-logo"/></svg></span>
+      <span>
+        <h1>Trend<em>Pulse</em></h1>
+        <small>SNS 트렌드 인텔리전스</small>
+      </span>
+    </a>
+    <span id="today"></span>
+    <div class="right">
+      <form id="searchForm" class="search">
+        <svg class="ic"><use href="#i-search"/></svg>
+        <input id="searchInput" type="search" placeholder="유튜브 트렌드 검색 (예: AI 광고)" autocomplete="off">
+        <kbd>/</kbd>
+      </form>
+      <span id="updated"></span>
+      <button id="refreshBtn" class="iconbtn" title="데이터 새로고침" type="button"><svg class="ic"><use href="#i-refresh"/></svg></button>
+      <button id="themeBtn" class="iconbtn" title="테마 전환" type="button"><svg class="ic"><use href="#i-moon"/></svg></button>
+    </div>
+  </div>
+  <nav class="tabwrap">
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-tab="youtube"><svg class="ic"><use href="#i-youtube"/></svg>유튜브</button>
+      <button class="tab" data-tab="shorts"><svg class="ic"><use href="#i-zap"/></svg>쇼츠</button>
+      <button class="tab" data-tab="ai"><svg class="ic"><use href="#i-sparkles"/></svg>AI 인사이트</button>
+      <button class="tab" data-tab="reels"><svg class="ic"><use href="#i-instagram"/></svg>릴스</button>
+      <button class="tab" data-tab="x"><svg class="ic"><use href="#i-x"/></svg>X</button>
+      <button class="tab" data-tab="threads"><svg class="ic"><use href="#i-at"/></svg>스레드</button>
+      <button class="tab" data-tab="tiktok"><svg class="ic"><use href="#i-tiktok"/></svg>틱톡</button>
+    </div>
+  </nav>
+</header>
+
+<div class="toolbar" id="toolbar">
+  <div class="chips" id="chips"></div>
+  <div class="periods" id="periods">
+    <button class="period" data-period="day" type="button">오늘</button>
+    <button class="period active" data-period="week" type="button">이번 주</button>
+    <button class="period" data-period="month" type="button">이번 달</button>
+  </div>
+  <div class="sortmenu" id="vidSortMenu">
+    <button class="sorttoggle" type="button"><span class="lbl">정렬</span><span class="curlabel">조회수순</span><svg class="ic caret"><use href="#i-chevron"/></svg></button>
+    <div class="sortlist"></div>
+  </div>
+</div>
+
+<main>
+  <!-- 유튜브 / 쇼츠 -->
+  <section id="videoView" class="view">
+    <div class="status" id="status"></div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <!-- AI 인사이트 -->
+  <section id="aiView" class="view" style="display:none">
+    <div class="status" id="aiStatus"></div>
+    <div id="aiBody">
+      <div class="ai-section">
+        <h2><svg class="ic"><use href="#i-sparkles"/></svg>새로 나온 영상 생성 모델</h2>
+        <p>Hugging Face · 최신 등록순</p>
+        <div class="modelrow" id="aiLatest"></div>
+      </div>
+      <div class="ai-section">
+        <h2><svg class="ic"><use href="#i-flame"/></svg>지금 뜨는 모델</h2>
+        <p>Hugging Face · 트렌딩 스코어순</p>
+        <div class="modelrow" id="aiTrending"></div>
+      </div>
+      <div class="ai-section">
+        <h2><svg class="ic"><use href="#i-news"/></svg>AI 영상 뉴스</h2>
+        <p>구글 뉴스 · 국내외 최신순</p>
+        <div class="newslist" id="aiNews"></div>
+      </div>
+      <div class="ai-tip"><svg class="ic"><use href="#i-zap"/></svg><span>인기 AI 영상은 <b>유튜브 탭 → 'AI' 카테고리</b>에서 조회수·좋아요순으로 볼 수 있어요.</span></div>
+    </div>
+  </section>
+
+  <!-- 릴스 -->
+  <section id="reelsView" class="view" style="display:none">
+    <div class="viewhead">
+      <div>
+        <h2><svg class="ic"><use href="#i-instagram"/></svg>인기 릴스</h2>
+        <p class="viewdesc">구독한 인스타그램 계정들의 최신 릴스를 지표 순으로 정렬합니다.</p>
+      </div>
+      <div class="viewtools">
+        <span class="count" id="reelsCount"></span>
+        <div class="sortmenu" id="reelsSortMenu">
+          <button class="sorttoggle" type="button"><span class="lbl">정렬</span><span class="curlabel">조회수순</span><svg class="ic caret"><use href="#i-chevron"/></svg></button>
+          <div class="sortlist"></div>
+        </div>
+        <button class="managebtn" data-panel="reelsManage" type="button"><svg class="ic"><use href="#i-users"/></svg>계정 관리</button>
+      </div>
+    </div>
+    <div class="manage" id="reelsManage">
+      <h3><svg class="ic"><use href="#i-users"/></svg>구독 계정</h3>
+      <div class="acc-chips" id="accChips"></div>
+      <div class="addbar">
+        <input id="accInput" type="text" placeholder="인스타그램 계정명 (예: runwayapp)">
+        <button id="accAdd" type="button"><svg class="ic"><use href="#i-plus"/></svg>추가</button>
+      </div>
+    </div>
+    <div class="status" id="reelsStatus"></div>
+    <div class="grid shorts" id="reelsGrid"></div>
+  </section>
+
+  <!-- X -->
+  <section id="xView" class="view" style="display:none">
+    <div class="viewhead">
+      <div>
+        <h2><svg class="ic"><use href="#i-x"/></svg>X 바이럴 포스트</h2>
+        <p class="viewdesc">구독 계정들의 최신 포스트를 좋아요·댓글·리포스트 지표와 함께 수집합니다.</p>
+      </div>
+      <div class="viewtools">
+        <span class="count" id="xCount"></span>
+        <div class="sortmenu" id="xSortMenu">
+          <button class="sorttoggle" type="button"><span class="lbl">정렬</span><span class="curlabel">좋아요순</span><svg class="ic caret"><use href="#i-chevron"/></svg></button>
+          <div class="sortlist"></div>
+        </div>
+        <button class="managebtn" data-panel="xManage" type="button"><svg class="ic"><use href="#i-users"/></svg>계정 관리</button>
+      </div>
+    </div>
+    <div class="manage" id="xManage">
+      <h3><svg class="ic"><use href="#i-users"/></svg>구독 계정</h3>
+      <div class="acc-chips" id="xChips"></div>
+      <div class="addbar">
+        <input id="xInput" type="text" placeholder="X(트위터) 계정명 (예: OpenAI)">
+        <button id="xAdd" type="button"><svg class="ic"><use href="#i-plus"/></svg>추가</button>
+      </div>
+    </div>
+    <div class="status" id="xStatus"></div>
+    <div class="postlist" id="xList"></div>
+  </section>
+
+  <!-- 스레드 -->
+  <section id="threadsView" class="view" style="display:none">
+    <div class="viewhead">
+      <div>
+        <h2><svg class="ic"><use href="#i-at"/></svg>스레드 인기 글</h2>
+        <p class="viewdesc">로그인 없이 실시간 조회를 시도하며, 조회가 막히면 계정 바로가기로 안내합니다.</p>
+      </div>
+      <div class="viewtools">
+        <span class="count" id="thCount"></span>
+        <div class="sortmenu" id="thSortMenu">
+          <button class="sorttoggle" type="button"><span class="lbl">정렬</span><span class="curlabel">좋아요순</span><svg class="ic caret"><use href="#i-chevron"/></svg></button>
+          <div class="sortlist"></div>
+        </div>
+        <button class="managebtn" data-panel="thManage" type="button"><svg class="ic"><use href="#i-users"/></svg>계정 관리</button>
+      </div>
+    </div>
+    <div class="manage" id="thManage">
+      <h3><svg class="ic"><use href="#i-users"/></svg>구독 계정</h3>
+      <div class="acc-chips" id="thChips"></div>
+      <div class="addbar">
+        <input id="thInput" type="text" placeholder="스레드 계정명 (예: openai)">
+        <button id="thAdd" type="button"><svg class="ic"><use href="#i-plus"/></svg>추가</button>
+      </div>
+    </div>
+    <div class="status" id="thStatus"></div>
+    <div class="postlist" id="thList"></div>
+    <div id="thFallback" style="display:none"></div>
+  </section>
+
+  <!-- 틱톡 -->
+  <section id="tiktokView" class="view" style="display:none">
+    <div class="viewhead">
+      <div>
+        <h2><svg class="ic"><use href="#i-tiktok"/></svg>틱톡 인기 영상</h2>
+        <p class="viewdesc">실시간 인기 피드(한국)와 구독 계정들의 최신 영상을 함께 모아 보여줍니다.</p>
+      </div>
+      <div class="viewtools">
+        <span class="count" id="ttCount"></span>
+        <div class="sortmenu" id="ttSortMenu">
+          <button class="sorttoggle" type="button"><span class="lbl">정렬</span><span class="curlabel">조회수순</span><svg class="ic caret"><use href="#i-chevron"/></svg></button>
+          <div class="sortlist"></div>
+        </div>
+        <button class="managebtn" data-panel="ttManage" type="button"><svg class="ic"><use href="#i-users"/></svg>계정 관리</button>
+      </div>
+    </div>
+    <div class="manage" id="ttManage">
+      <h3><svg class="ic"><use href="#i-users"/></svg>구독 계정</h3>
+      <div class="acc-chips" id="ttChips"></div>
+      <div class="addbar">
+        <input id="ttInput" type="text" placeholder="틱톡 계정명 (@ 없이, 예: khaby.lame)">
+        <button id="ttAdd" type="button"><svg class="ic"><use href="#i-plus"/></svg>추가</button>
+      </div>
+    </div>
+    <div class="status" id="ttStatus"></div>
+    <div class="grid shorts" id="ttGrid"></div>
+  </section>
+</main>
+
+<footer>
+  <span><b>TrendPulse</b> · 유튜브 · 쇼츠 · 릴스 · X · 스레드 · 틱톡 · AI 영상 트렌드를 한눈에</span>
+  <span>데이터 출처: YouTube · Instagram · X · Threads · TikTok · Hugging Face · Google News (1시간 캐시)</span>
+</footer>
+
+<div id="modal">
+  <div class="modal-box" id="modalBox">
+    <div class="modal-head">
+      <h3 id="modalTitle"></h3>
+      <button id="closeModal" class="iconbtn" type="button" title="닫기 (Esc)"><svg class="ic"><use href="#i-close"/></svg></button>
+    </div>
+    <iframe class="player" id="player" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <div class="modal-actions">
+      <a id="openExternal" target="_blank" rel="noopener">유튜브에서 열기<svg class="ic"><use href="#i-external"/></svg></a>
+    </div>
+  </div>
+</div>
+
+<div id="toasts"></div>
+
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const ic = (name, cls = '') => `<svg class="ic ${cls}"><use href="#i-${name}"/></svg>`;
+
+const state = { tab: 'youtube', category: '전체', period: 'week', categories: ['전체'], search: '' };
+const VIEWS = { youtube: 'videoView', shorts: 'videoView', ai: 'aiView', reels: 'reelsView', x: 'xView', threads: 'threadsView', tiktok: 'tiktokView' };
+
+/* ---------- 포맷터 ---------- */
+const fmt = n => {
+  if (n >= 1e8) return (n / 1e8).toFixed(1).replace(/\.0$/, '') + '억';
+  if (n >= 1e4) return (n / 1e4).toFixed(1).replace(/\.0$/, '') + '만';
+  if (n >= 1e3) return (n / 1e3).toFixed(1).replace(/\.0$/, '') + '천';
+  return (n || 0).toLocaleString('ko-KR');
+};
+function timeAgo(ts) {
+  if (!ts) return '';
+  const s = Date.now() / 1000 - ts;
+  if (s < 60) return '방금 전';
+  if (s < 3600) return Math.floor(s / 60) + '분 전';
+  if (s < 86400) return Math.floor(s / 3600) + '시간 전';
+  return Math.floor(s / 86400) + '일 전';
+}
+function timeAgoStr(str) {
+  if (!str) return '';
+  const t = Date.parse(str);
+  return isNaN(t) ? '' : timeAgo(t / 1000);
+}
+
+/* ---------- 헤더: 날짜 / 테마 / 새로고침 상태 ---------- */
+$('today').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+
+const themeBtn = $('themeBtn');
+function applyTheme(t) {
+  document.documentElement.dataset.theme = t;
+  themeBtn.innerHTML = ic(t === 'dark' ? 'moon' : 'sun');
+  localStorage.setItem('tp-theme', t);
+}
+applyTheme(localStorage.getItem('tp-theme') || 'dark');
+themeBtn.onclick = () => applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+
+let inflight = 0;
+function beginLoad() { inflight++; $('refreshBtn').classList.add('loading'); }
+function endLoad() { inflight = Math.max(0, inflight - 1); if (!inflight) $('refreshBtn').classList.remove('loading'); }
+function setUpdated(ts) {
+  $('updated').innerHTML = ic('clock') + new Date(ts * 1000).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) + ' 업데이트';
+}
+
+/* ---------- 토스트 ---------- */
+function toast(msg, icon = 'check') {
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.innerHTML = ic(icon) + `<span></span>`;
+  el.querySelector('span').textContent = msg;
+  $('toasts').appendChild(el);
+  setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 350); }, 2400);
+}
+
+/* ---------- 상태 / 스켈레톤 ---------- */
+function showStatus(el, { icon = 'inbox', title, desc = '', retry = null }) {
+  el.className = 'status show';
+  el.innerHTML = `<div class="bigic">${ic(icon)}</div><h4></h4><p></p>`;
+  el.querySelector('h4').textContent = title;
+  el.querySelector('p').textContent = desc;
+  if (retry) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.textContent = '다시 시도';
+    b.onclick = retry;
+    el.appendChild(b);
+  }
+}
+function hideStatus(el) { el.className = 'status'; el.innerHTML = ''; }
+function showSkeleton(grid, n, post = false) {
+  grid.innerHTML = '';
+  for (let i = 0; i < n; i++) {
+    const el = document.createElement('div');
+    if (post) {
+      el.className = 'postcard sk';
+      el.innerHTML = `<div class="phead"><span class="avatar sk-shimmer" style="background:var(--skel1)"></span>
+        <div class="pwho" style="flex:1"><div class="sk-line sk-shimmer" style="width:40%"></div><div class="sk-line sk-shimmer short" style="height:9px"></div></div></div>
+        <div class="sk-line sk-shimmer"></div><div class="sk-line sk-shimmer"></div><div class="sk-line sk-shimmer short"></div>`;
+    } else {
+      el.className = 'card sk';
+      el.innerHTML = `<div class="thumbwrap"><div class="thumb sk-shimmer"></div></div>
+        <div class="meta"><div class="sk-line sk-shimmer"></div><div class="sk-line sk-shimmer short"></div></div>`;
+    }
+    grid.appendChild(el);
+  }
+}
+
+/* ---------- 정렬 드롭다운 (공용) ---------- */
+function initFoldMenu(menuId, options, stateObj, onPick) {
+  const menu = $(menuId);
+  const list = menu.querySelector('.sortlist');
+  list.innerHTML = '';
+  options.forEach(o => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = o.key === stateObj.sort ? 'sel' : '';
+    b.innerHTML = `${ic(o.icon)}<span>${o.label}</span>${ic('check', 'check')}`;
+    b.onclick = () => {
+      menu.classList.remove('open');
+      if (stateObj.sort === o.key) return;
+      stateObj.sort = o.key;
+      menu.querySelector('.curlabel').textContent = o.label;
+      list.querySelectorAll('button').forEach(x => x.classList.remove('sel'));
+      b.classList.add('sel');
+      onPick();
+    };
+    list.appendChild(b);
+  });
+  menu.querySelector('.sorttoggle').onclick = e => {
+    e.stopPropagation();
+    document.querySelectorAll('.sortmenu.open').forEach(m => { if (m !== menu) m.classList.remove('open'); });
+    menu.classList.toggle('open');
+  };
+}
+document.addEventListener('click', () => document.querySelectorAll('.sortmenu.open').forEach(m => m.classList.remove('open')));
+
+/* ---------- 계정 관리 패널 토글 ---------- */
+document.querySelectorAll('.managebtn').forEach(btn => {
+  btn.onclick = () => {
+    const panel = $(btn.dataset.panel);
+    const open = panel.classList.toggle('open');
+    btn.classList.toggle('on', open);
+  };
+});
+
+/* ---------- 카테고리 칩 ---------- */
+async function initCategories() {
+  try {
+    const res = await fetch('/api/categories');
+    state.categories = (await res.json()).categories;
+  } catch (e) { /* 서버 오류 시 기본값 유지 */ }
+  renderChips();
+}
+function renderChips() {
+  const box = $('chips');
+  box.innerHTML = '';
+  state.categories.forEach(c => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip' + (c === state.category && !state.search ? ' active' : '');
+    b.textContent = c;
+    b.onclick = () => {
+      state.category = c; state.search = '';
+      $('searchInput').value = '';
+      renderChips(); loadVideos();
+    };
+    box.appendChild(b);
+  });
+}
+
+/* ---------- 유튜브 / 쇼츠 ---------- */
+let loadSeq = 0;
+let vidData = [];
+let vidHasLikes = false;
+const vidState = { sort: 'views' };  // views | likes
+async function loadVideos(force = false) {
+  if (state.tab !== 'youtube' && state.tab !== 'shorts') return;
+  const seq = ++loadSeq;
+  const grid = $('grid');
+  const status = $('status');
+  const wantLikes = vidState.sort === 'likes';
+  hideStatus(status);
+  grid.className = 'grid' + (state.tab === 'shorts' ? ' shorts' : '');
+  showSkeleton(grid, state.tab === 'shorts' ? 14 : 10);
+  const q = new URLSearchParams({
+    category: state.category, period: state.period,
+    shorts: state.tab === 'shorts' ? '1' : '0', force: force ? '1' : '0',
+    enrich: wantLikes ? '1' : '0', q: state.search
+  });
+  beginLoad();
+  try {
+    const res = await fetch('/api/videos?' + q);
+    const data = await res.json();
+    if (seq !== loadSeq) return;
+    setUpdated(data.fetchedAt);
+    vidData = data.videos || [];
+    vidHasLikes = wantLikes;
+    if (!vidData.length) {
+      grid.innerHTML = '';
+      showStatus(status, { icon: 'inbox', title: '결과가 없습니다', desc: '다른 카테고리나 기간을 선택해 보세요.', retry: () => loadVideos(true) });
+      return;
+    }
+    renderVideos();
+  } catch (e) {
+    if (seq !== loadSeq) return;
+    grid.innerHTML = '';
+    showStatus(status, { icon: 'wifi-off', title: '불러오기에 실패했습니다', desc: '네트워크 연결을 확인한 뒤 다시 시도해 주세요.', retry: () => loadVideos(true) });
+  } finally { endLoad(); }
+}
+function renderVideos() {
+  const grid = $('grid');
+  grid.className = 'grid' + (state.tab === 'shorts' ? ' shorts' : '');
+  const f = vidState.sort;
+  const sorted = vidData.slice().sort((a, b) => (b[f] || 0) - (a[f] || 0));
+  grid.innerHTML = '';
+  sorted.forEach((v, i) => grid.appendChild(videoCard(v, i + 1)));
+}
+function rankBadge(rank) {
+  const cls = rank <= 3 ? ` r${rank}` : '';
+  return `<span class="rank${cls}">${rank}위</span>`;
+}
+function videoCard(v, rank) {
+  const el = document.createElement('article');
+  el.className = 'card';
+  const likeStr = v.likes ? `<span class="stat${vidState.sort === 'likes' ? ' hot' : ''}">${ic('thumb')}${fmt(v.likes)}</span>` : '';
+  el.innerHTML = `
+    <div class="thumbwrap">
+      <img class="thumb" loading="lazy" src="${v.thumbnail}" alt="">
+      ${rankBadge(rank)}
+      ${v.length ? `<span class="len">${v.length}</span>` : ''}
+      <div class="playov"><span>${ic('play', 'fill')}</span></div>
+    </div>
+    <div class="meta">
+      <h3 class="title"></h3>
+      <div class="sub"><span class="chn"></span><span class="dot">·</span><span>${v.published || ''}</span></div>
+      <div class="stats">
+        <span class="stat${vidState.sort === 'views' ? ' hot' : ''}">${ic('eye')}${fmt(v.views)}회</span>
+        ${likeStr}
+      </div>
+    </div>`;
+  el.querySelector('.title').textContent = v.title;
+  el.querySelector('.chn').textContent = v.channel;
+  el.onclick = () => openPlayer(v, state.tab === 'shorts');
+  return el;
+}
+
+/* ---------- 재생 모달 ---------- */
+function openPlayer(v, vertical) {
+  $('modalBox').className = 'modal-box' + (vertical ? ' vertical' : '');
+  $('modalTitle').textContent = v.title || '';
+  $('player').src = `https://www.youtube.com/embed/${v.id}?autoplay=1`;
+  $('openExternal').href = `https://www.youtube.com/watch?v=${v.id}`;
+  $('modal').classList.add('open');
+}
+function closePlayer() {
+  $('player').src = '';
+  $('modal').classList.remove('open');
+}
+$('closeModal').onclick = closePlayer;
+$('modal').onclick = e => { if (e.target.id === 'modal') closePlayer(); };
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closePlayer();
+  if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+    e.preventDefault(); $('searchInput').focus();
+  }
+});
+
+/* ---------- AI 인사이트 ---------- */
+let aiLoaded = false;
+async function loadAI(force = false) {
+  if (aiLoaded && !force) return;
+  const status = $('aiStatus');
+  $('aiBody').style.display = 'none';
+  showStatus(status, { icon: 'sparkles', title: 'AI 소식을 불러오는 중...', desc: '영상 생성 모델과 뉴스를 수집하고 있어요.' });
+  beginLoad();
+  try {
+    const data = await (await fetch('/api/ai' + (force ? '?force=1' : ''))).json();
+    aiLoaded = true;
+    hideStatus(status);
+    $('aiBody').style.display = 'block';
+    setUpdated(data.fetchedAt);
+    renderModels('aiLatest', data.models.latest);
+    renderModels('aiTrending', data.models.trending);
+    const nl = $('aiNews');
+    nl.innerHTML = '';
+    (data.news || []).slice(0, 20).forEach(n => {
+      const a = document.createElement('a');
+      a.className = 'newsitem'; a.href = n.link; a.target = '_blank'; a.rel = 'noopener';
+      a.innerHTML = `<span class="badge ${n.region === '국내' ? 'kr' : 'gl'}">${n.region}</span>
+        <span class="ntitle"></span><span class="nsrc"></span>`;
+      a.querySelector('.ntitle').textContent = n.title;
+      a.querySelector('.nsrc').textContent = (n.source ? n.source + ' · ' : '') + timeAgo(n.ts);
+      nl.appendChild(a);
+    });
+  } catch (e) {
+    showStatus(status, { icon: 'wifi-off', title: '불러오기에 실패했습니다', desc: '네트워크 연결을 확인한 뒤 다시 시도해 주세요.', retry: () => loadAI(true) });
+  } finally { endLoad(); }
+}
+function renderModels(elId, models) {
+  const box = $(elId);
+  box.innerHTML = '';
+  (models || []).forEach(m => {
+    const a = document.createElement('a');
+    a.className = 'modelcard';
+    a.href = 'https://huggingface.co/' + m.id;
+    a.target = '_blank'; a.rel = 'noopener';
+    const t2v = m.pipeline === 'text-to-video';
+    a.innerHTML = `<div class="mid"></div>
+      <div class="msub">
+        <span class="pill ${t2v ? 't2v' : 'i2v'}">${t2v ? '텍스트→영상' : '이미지→영상'}</span>
+        <span class="stat">${ic('heart')}${fmt(m.likes)}</span>
+        <span class="stat">${ic('download')}${fmt(m.downloads)}</span>
+        <span>${m.createdAt ? m.createdAt.slice(0, 10) : ''}</span>
+      </div>`;
+    a.querySelector('.mid').textContent = m.id;
+    box.appendChild(a);
+  });
+}
+
+/* ---------- 릴스 ---------- */
+let reelsData = [];
+let reelsLoaded = false;
+const reelsState = { sort: 'views' };  // views | likes | comments
+async function loadReels(force = false) {
+  if (reelsLoaded && !force) return;
+  const status = $('reelsStatus');
+  const grid = $('reelsGrid');
+  hideStatus(status);
+  showSkeleton(grid, 14);
+  beginLoad();
+  try {
+    const data = await (await fetch('/api/reels' + (force ? '?force=1' : ''))).json();
+    renderAccChips('accChips', 'reels', data.accounts);
+    setUpdated(data.fetchedAt);
+    reelsData = data.reels || [];
+    reelsLoaded = true;
+    if (!reelsData.length) {
+      grid.innerHTML = '';
+      $('reelsCount').textContent = '';
+      showStatus(status, { icon: 'inbox', title: '가져온 릴스가 없습니다', desc: '인스타그램이 일시적으로 요청을 제한했을 수 있어요. 잠시 후 새로고침하거나 계정을 추가해 보세요.', retry: () => loadReels(true) });
+      return;
+    }
+    renderReels();
+  } catch (e) {
+    grid.innerHTML = '';
+    showStatus(status, { icon: 'wifi-off', title: '불러오기에 실패했습니다', desc: '네트워크 연결을 확인한 뒤 다시 시도해 주세요.', retry: () => loadReels(true) });
+  } finally { endLoad(); }
+}
+function shortCard(r, rank, sortKey) {
+  const el = document.createElement('article');
+  el.className = 'card';
+  el.innerHTML = `
+    <div class="thumbwrap">
+      <img class="thumb" loading="lazy" src="/api/img?u=${encodeURIComponent(r.thumbnail)}" alt="">
+      ${rankBadge(rank)}
+      <div class="playov"><span>${ic('play', 'fill')}</span></div>
+    </div>
+    <div class="meta">
+      <h3 class="title"></h3>
+      <div class="sub"><span class="chn">@${r.account}</span></div>
+      <div class="stats">
+        <span class="stat${sortKey === 'views' ? ' hot' : ''}">${ic('eye')}${fmt(r.views)}</span>
+        <span class="stat${sortKey === 'likes' ? ' hot' : ''}">${ic('heart')}${fmt(r.likes || 0)}</span>
+        <span class="stat${sortKey === 'comments' ? ' hot' : ''}">${ic('comment')}${fmt(r.comments || 0)}</span>
+      </div>
+    </div>`;
+  el.querySelector('.title').textContent = r.title;
+  el.onclick = () => window.open(r.url, '_blank');
+  return el;
+}
+function renderReels() {
+  const grid = $('reelsGrid');
+  const f = reelsState.sort;
+  const label = { views: '조회수', likes: '좋아요', comments: '댓글' };
+  const sorted = reelsData.slice().sort((a, b) => (b[f] || 0) - (a[f] || 0));
+  grid.innerHTML = '';
+  sorted.forEach((r, i) => grid.appendChild(shortCard(r, i + 1, f)));
+  $('reelsCount').textContent = `${label[f]} 기준 · ${sorted.length}개`;
+}
+
+/* ---------- 계정 칩 / 추가·삭제 (공용) ---------- */
+const AVATAR_COLORS = [
+  'linear-gradient(135deg,#ff4d8d,#c2308f)', 'linear-gradient(135deg,#8b5cf6,#5f3dc4)',
+  'linear-gradient(135deg,#ff8a3c,#e8590c)', 'linear-gradient(135deg,#20c997,#0ca678)',
+  'linear-gradient(135deg,#4dabf7,#1971c2)', 'linear-gradient(135deg,#f06595,#a61e4d)',
+  'linear-gradient(135deg,#94d82d,#5c940d)', 'linear-gradient(135deg,#ffd43b,#f08c00)',
+];
+function avatarColor(name) {
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
+  return AVATAR_COLORS[h % AVATAR_COLORS.length];
+}
+const RELOADERS = { reels: f => loadReels(f), x: f => loadSocial('x', f), threads: f => loadSocial('threads', f), tiktok: f => loadTikTok(f) };
+function renderAccChips(elId, kind, accounts) {
+  const box = $(elId);
+  box.innerHTML = '';
+  (accounts || []).forEach(name => {
+    const chip = document.createElement('span');
+    chip.className = 'acc-chip';
+    chip.innerHTML = `@<b></b><button type="button" title="삭제">${ic('close')}</button>`;
+    chip.querySelector('b').textContent = name;
+    chip.querySelector('button').onclick = () => updateAccount(kind, 'remove', name);
+    box.appendChild(chip);
+  });
+}
+async function updateAccount(kind, action, username) {
+  try {
+    const res = await fetch(`/api/${kind}/accounts`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action, username })
+    });
+    if (!res.ok) { toast('계정명을 확인해 주세요', 'close'); return; }
+    toast(action === 'add' ? `@${username} 추가됨 — 데이터를 다시 불러옵니다` : `@${username} 삭제됨`);
+    RELOADERS[kind](true);
+  } catch (e) { toast('요청에 실패했습니다', 'close'); }
+}
+function wireAddBar(kind, inputId, addId) {
+  const add = () => {
+    const input = $(inputId);
+    const name = input.value.trim().replace(/^@/, '');
+    if (!name) return;
+    input.value = '';
+    updateAccount(kind, 'add', name);
+  };
+  $(addId).onclick = add;
+  $(inputId).addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); add(); } });
+}
+wireAddBar('reels', 'accInput', 'accAdd');
+wireAddBar('x', 'xInput', 'xAdd');
+wireAddBar('threads', 'thInput', 'thAdd');
+wireAddBar('tiktok', 'ttInput', 'ttAdd');
+
+/* ---------- X · 스레드 ---------- */
+const social = {
+  x: { data: [], loaded: false, sort: 'likes', opts: ['likes', 'replies', 'reposts', 'views'], repostField: 'retweets', repostLabel: '리포스트순' },
+  threads: { data: [], loaded: false, sort: 'likes', opts: ['likes', 'replies', 'reposts'], repostField: 'reposts', repostLabel: '리포스트순' },
+};
+const SORT_OPTS = {
+  likes: { label: '좋아요순', icon: 'heart' },
+  replies: { label: '댓글순', icon: 'comment' },
+  reposts: { label: '리포스트순', icon: 'repeat' },
+  views: { label: '조회수순', icon: 'eye' },
+};
+function sortField(kind) {
+  const s = social[kind].sort;
+  return s === 'reposts' ? social[kind].repostField : s;
+}
+function postCard(p, rank, kind) {
+  const el = document.createElement('article');
+  el.className = 'postcard';
+  const rt = kind === 'threads' ? (p.reposts || 0) : (p.retweets || 0);
+  const active = social[kind].sort;
+  const name = p.name || p.account;
+  const when = kind === 'x' ? timeAgoStr(p.createdAt) : timeAgo(p.createdAt);
+  el.innerHTML = `
+    <div class="phead">
+      <span class="avatar" style="--av:${avatarColor(p.account)}">${(name[0] || '?').toUpperCase()}</span>
+      <div class="pwho"><b></b><span>@${p.account}${when ? ' · ' + when : ''}</span></div>
+      <span class="prank${rank <= 3 ? ' top' : ''}">${rank}위</span>
+    </div>
+    <p class="ptext"></p>
+    ${p.media ? `<img class="pmedia" loading="lazy" src="/api/img?u=${encodeURIComponent(p.media)}" alt="">` : ''}
+    <div class="pstats">
+      <span class="stat${active === 'likes' ? ' hot' : ''}">${ic('heart')}<b>${fmt(p.likes)}</b></span>
+      <span class="stat${active === 'replies' ? ' hot' : ''}">${ic('comment')}<b>${fmt(p.replies)}</b></span>
+      <span class="stat${active === 'reposts' ? ' hot' : ''}">${ic('repeat')}<b>${fmt(rt)}</b></span>
+      ${p.views ? `<span class="stat${active === 'views' ? ' hot' : ''}">${ic('eye')}<b>${fmt(p.views)}</b></span>` : ''}
+    </div>`;
+  el.querySelector('.pwho b').textContent = name;
+  el.querySelector('.ptext').textContent = p.text;
+  el.onclick = () => window.open(p.url, '_blank');
+  return el;
+}
+function renderSocial(kind) {
+  const listEl = $(kind === 'x' ? 'xList' : 'thList');
+  const cntEl = $(kind === 'x' ? 'xCount' : 'thCount');
+  const f = sortField(kind);
+  const sorted = social[kind].data.slice().sort((a, b) => (b[f] || 0) - (a[f] || 0));
+  listEl.innerHTML = '';
+  sorted.forEach((p, i) => listEl.appendChild(postCard(p, i + 1, kind)));
+  cntEl.textContent = sorted.length ? `${sorted.length}개 포스트` : '';
+}
+async function loadSocial(kind, force = false) {
+  const cfg = social[kind];
+  if (cfg.loaded && !force) return;
+  const statusEl = $(kind === 'x' ? 'xStatus' : 'thStatus');
+  const listEl = $(kind === 'x' ? 'xList' : 'thList');
+  const chipsId = kind === 'x' ? 'xChips' : 'thChips';
+  hideStatus(statusEl);
+  showSkeleton(listEl, 6, true);
+  if (kind === 'threads') $('thFallback').style.display = 'none';
+  beginLoad();
+  try {
+    const data = await (await fetch('/api/' + kind + (force ? '?force=1' : ''))).json();
+    renderAccChips(chipsId, kind, data.accounts);
+    setUpdated(data.fetchedAt);
+    cfg.data = data.posts || [];
+    cfg.loaded = true;
+    if (!cfg.data.length) {
+      listEl.innerHTML = '';
+      if (kind === 'threads') showThreadsFallback(data.accounts);
+      else showStatus(statusEl, { icon: 'inbox', title: '가져온 포스트가 없습니다', desc: '계정명을 확인하거나 잠시 후 새로고침해 주세요.', retry: () => loadSocial(kind, true) });
+      return;
+    }
+    renderSocial(kind);
+  } catch (e) {
+    listEl.innerHTML = '';
+    showStatus(statusEl, { icon: 'wifi-off', title: '불러오기에 실패했습니다', desc: '네트워크 연결을 확인한 뒤 다시 시도해 주세요.', retry: () => loadSocial(kind, true) });
+  } finally { endLoad(); }
+}
+function showThreadsFallback(accounts) {
+  const box = $('thFallback');
+  box.style.display = 'block';
+  box.innerHTML = `<p class="note" style="margin-top:4px">⚠️ 지금은 스레드가 로그인 없는 조회를 차단하고 있어 실시간 글을 가져오지 못했습니다. 아래에서 각 계정을 바로 열어볼 수 있습니다. (메타가 접근을 다시 허용하면 자동으로 목록이 채워집니다.)</p>
+    <div class="linkgrid"></div>`;
+  const grid = box.querySelector('.linkgrid');
+  (accounts || []).forEach(name => {
+    const a = document.createElement('a');
+    a.className = 'linkcard'; a.href = 'https://www.threads.com/@' + name;
+    a.target = '_blank'; a.rel = 'noopener';
+    a.innerHTML = `@${name}<small>스레드에서 열기 ↗</small>`;
+    grid.appendChild(a);
+  });
+}
+
+/* ---------- 틱톡 ---------- */
+let tiktokData = [];
+let tiktokLoaded = false;
+const tiktokState = { sort: 'views' };  // views | likes | comments
+async function loadTikTok(force = false) {
+  if (tiktokLoaded && !force) return;
+  const status = $('ttStatus');
+  const grid = $('ttGrid');
+  hideStatus(status);
+  showSkeleton(grid, 14);
+  beginLoad();
+  try {
+    const data = await (await fetch('/api/tiktok' + (force ? '?force=1' : ''))).json();
+    renderAccChips('ttChips', 'tiktok', data.accounts);
+    setUpdated(data.fetchedAt);
+    tiktokData = data.posts || [];
+    tiktokLoaded = true;
+    if (!tiktokData.length) {
+      grid.innerHTML = '';
+      $('ttCount').textContent = '';
+      showStatus(status, { icon: 'inbox', title: '가져온 영상이 없습니다', desc: '무료 API가 일시적으로 제한되는 경우가 있어요. 잠시 후 새로고침해 주세요.', retry: () => loadTikTok(true) });
+      return;
+    }
+    renderTikTok();
+  } catch (e) {
+    grid.innerHTML = '';
+    showStatus(status, { icon: 'wifi-off', title: '불러오기에 실패했습니다', desc: '네트워크 연결을 확인한 뒤 다시 시도해 주세요.', retry: () => loadTikTok(true) });
+  } finally { endLoad(); }
+}
+function renderTikTok() {
+  const grid = $('ttGrid');
+  const f = tiktokState.sort;
+  const label = { views: '조회수', likes: '좋아요', comments: '댓글' };
+  const sorted = tiktokData.slice().sort((a, b) => (b[f] || 0) - (a[f] || 0));
+  grid.innerHTML = '';
+  sorted.forEach((t, i) => grid.appendChild(shortCard(t, i + 1, f)));
+  $('ttCount').textContent = `${label[f]} 기준 · ${sorted.length}개`;
+}
+
+/* ---------- 정렬 메뉴 초기화 ---------- */
+initFoldMenu('vidSortMenu', [
+  { key: 'views', label: '조회수순', icon: 'eye' },
+  { key: 'likes', label: '좋아요순', icon: 'thumb' },
+], vidState, () => {
+  if (vidState.sort === 'likes' && !vidHasLikes) loadVideos();  // 좋아요 데이터 없으면 재요청
+  else renderVideos();
+});
+initFoldMenu('reelsSortMenu', [
+  { key: 'views', label: '조회수순', icon: 'eye' },
+  { key: 'likes', label: '좋아요순', icon: 'heart' },
+  { key: 'comments', label: '댓글순', icon: 'comment' },
+], reelsState, renderReels);
+initFoldMenu('ttSortMenu', [
+  { key: 'views', label: '조회수순', icon: 'eye' },
+  { key: 'likes', label: '좋아요순', icon: 'heart' },
+  { key: 'comments', label: '댓글순', icon: 'comment' },
+], tiktokState, renderTikTok);
+initFoldMenu('xSortMenu',
+  social.x.opts.map(k => ({ key: k, label: SORT_OPTS[k].label, icon: SORT_OPTS[k].icon })),
+  social.x, () => renderSocial('x'));
+initFoldMenu('thSortMenu',
+  social.threads.opts.map(k => ({ key: k, label: SORT_OPTS[k].label, icon: SORT_OPTS[k].icon })),
+  social.threads, () => renderSocial('threads'));
+
+/* ---------- 탭 / 기간 / 검색 / 새로고침 ---------- */
+function switchTab(tab) {
+  state.tab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  const isVideo = tab === 'youtube' || tab === 'shorts';
+  $('toolbar').style.display = isVideo ? 'flex' : 'none';
+  Object.values(VIEWS).forEach(id => $(id).style.display = 'none');
+  $(VIEWS[tab]).style.display = 'block';
+  if (isVideo) loadVideos();
+  else if (tab === 'ai') loadAI();
+  else if (tab === 'reels') loadReels();
+  else if (tab === 'x') loadSocial('x');
+  else if (tab === 'threads') loadSocial('threads');
+  else if (tab === 'tiktok') loadTikTok();
+}
+$('tabs').onclick = e => {
+  const btn = e.target.closest('.tab');
+  if (btn) switchTab(btn.dataset.tab);
+};
+$('periods').onclick = e => {
+  const btn = e.target.closest('.period');
+  if (!btn) return;
+  state.period = btn.dataset.period;
+  document.querySelectorAll('.period').forEach(p => p.classList.toggle('active', p === btn));
+  loadVideos();
+};
+$('searchForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const kw = $('searchInput').value.trim();
+  state.search = kw;
+  if (state.tab !== 'youtube' && state.tab !== 'shorts') switchTab('youtube');
+  renderChips();
+  loadVideos();
+});
+$('refreshBtn').onclick = () => {
+  if (state.tab === 'ai') loadAI(true);
+  else if (state.tab === 'reels') loadReels(true);
+  else if (state.tab === 'x') loadSocial('x', true);
+  else if (state.tab === 'threads') loadSocial('threads', true);
+  else if (state.tab === 'tiktok') loadTikTok(true);
+  else loadVideos(true);
+};
+
+initCategories().then(() => loadVideos());
+</script>
+</body>
+</html>

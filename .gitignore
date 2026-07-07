@@ -1,0 +1,9 @@
+# 사용자별 구독 계정 데이터 (런타임에 생성됨)
+reels_accounts.json
+x_accounts.json
+threads_accounts.json
+tiktok_accounts.json
+
+__pycache__/
+*.pyc
+.DS_Store
