@@ -132,6 +132,73 @@ def sessions_status():
     with _sessions_lock:
         return {plat: bool(_sessions.get(plat)) for plat in SESSION_ENV}
 
+
+# 세션 유효성(만료 여부) 캐시 — 실제 인증 요청으로 확인하고 2분간 캐시합니다.
+_session_check = {}
+_session_check_lock = threading.Lock()
+CHECK_TTL = 120
+
+
+def _probe_instagram(cookie):
+    csrf = cookie_value(cookie, "csrftoken")
+    req = urllib.request.Request("https://www.instagram.com/api/v1/feed/user/25025320/?count=1")
+    req.add_header("User-Agent", UA)
+    req.add_header("x-ig-app-id", IG_APP_ID)
+    req.add_header("Cookie", cookie)
+    if csrf:
+        req.add_header("x-csrftoken", csrf)
+    req.add_header("Referer", "https://www.instagram.com/instagram/")
+    with urllib.request.urlopen(req, timeout=10) as r:
+        return r.status == 200
+
+
+def check_session(platform, force=False):
+    """설정된 세션이 아직 유효한지 확인합니다. 반환: 'valid' | 'expired' | 'none'.
+    실제 인증 요청을 보내므로 결과를 2분 캐시합니다."""
+    cookie = threads_cookie() if platform == "threads" else session_cookie(platform)
+    if not cookie:
+        return "none"
+    now = time.time()
+    with _session_check_lock:
+        hit = _session_check.get(platform)
+        if hit and not force and now - hit[0] < CHECK_TTL:
+            return hit[1]
+    result = "expired"
+    try:
+        if platform in ("instagram", "threads"):
+            result = "valid" if _probe_instagram(cookie) else "expired"
+        elif platform == "x":
+            # 로그인 쿠키로 인증 조회가 되면 유효 (게스트 토큰 폴백과 무관하게 확인)
+            result = "valid" if fetch_x_graphql("X", authed=True) else "expired"
+        elif platform == "youtube":
+            result = "valid"  # 유튜브는 쿠키 없이도 동작 — 저장 여부만 의미
+    except urllib.error.HTTPError as e:
+        result = "expired" if e.code in (401, 403, 302) else "valid"
+    except Exception:
+        # 네트워크 오류 등은 만료로 단정하지 않음 — 마지막 알려진 값 유지
+        with _session_check_lock:
+            prev = _session_check.get(platform)
+        return prev[1] if prev else "unknown"
+    with _session_check_lock:
+        _session_check[platform] = (now, result)
+    return result
+
+
+def sessions_full_status(check=False):
+    """configured(설정 여부) + validity(유효/만료) 를 함께 반환. check=True면 실제 검사."""
+    conf = sessions_status()
+    validity = {}
+    for plat, on in conf.items():
+        if not on:
+            validity[plat] = "none"
+        elif check:
+            validity[plat] = check_session(plat)
+        else:
+            with _session_check_lock:
+                hit = _session_check.get(plat)
+            validity[plat] = hit[1] if hit else "saved"
+    return conf, validity
+
 USERNAME_RE = re.compile(r"^[A-Za-z0-9._\-]{1,40}$")
 
 # ---------------------------------------------------------------- 유튜브
@@ -1148,8 +1215,10 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if parsed.path == "/api/sessions":
-            # 설정 여부(불리언)만 반환 — 쿠키 값은 절대 노출하지 않습니다.
-            self._send(200, {"configured": sessions_status(),
+            # 설정 여부 + 유효성(만료 여부)만 반환 — 쿠키 값은 절대 노출하지 않습니다.
+            do_check = qs.get("check", ["0"])[0] == "1"
+            configured, validity = sessions_full_status(check=do_check)
+            self._send(200, {"configured": configured, "validity": validity,
                              "adminRequired": bool(ADMIN_TOKEN)})
             return
 
@@ -1254,7 +1323,14 @@ class Handler(BaseHTTPRequestHandler):
             except OSError:
                 self._send(500, {"error": "read-only filesystem — 배포 환경에서는 환경변수를 사용하세요"})
                 return
-            self._send(200, {"configured": sessions_status()})
+            # 방금 저장/삭제한 항목의 유효성 캐시를 비워 즉시 재검사되게 함
+            with _session_check_lock:
+                for k in patch:
+                    _session_check.pop(k, None)
+                    if k == "instagram":
+                        _session_check.pop("threads", None)
+            configured, validity = sessions_full_status(check=True)
+            self._send(200, {"configured": configured, "validity": validity})
             return
 
         # /api/{reels|x|threads|tiktok}/accounts — 구독 계정 추가/삭제

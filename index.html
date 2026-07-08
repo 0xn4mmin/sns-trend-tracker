@@ -578,6 +578,20 @@
   }
   .srow-head .badge-on i { width: 5px; height: 5px; border-radius: 50%; background: #34d399; font-style: normal; }
   .srow-head .badge-off { margin-left: auto; font-size: 10.5px; color: var(--t3); }
+  .srow-head .badge-saved {
+    margin-left: auto; display: inline-flex; align-items: center; gap: 5px;
+    font-size: 10.5px; font-weight: 700; color: var(--t2);
+    background: var(--input); border-radius: 999px; padding: 3px 9px;
+  }
+  .srow-head .badge-saved i { width: 5px; height: 5px; border-radius: 50%; background: var(--t3); font-style: normal; animation: pulse 1.2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: .4; } 50% { opacity: 1; } }
+  .srow-head .badge-exp {
+    margin-left: auto; display: inline-flex; align-items: center; gap: 5px;
+    font-size: 10.5px; font-weight: 700; color: #ff7a9c;
+    background: rgba(255,77,141,.13); border-radius: 999px; padding: 3px 9px 3px 8px;
+  }
+  .srow-head .badge-exp .ic { width: 11px; height: 11px; }
+  .srow.expired .srow-in input { border-color: rgba(255,77,141,.4); }
   .srow-in { display: flex; gap: 8px; }
   .srow-in input {
     flex: 1; min-width: 0; background: var(--input); border: 1px solid var(--border); border-radius: 11px;
@@ -1010,29 +1024,38 @@ const SESSION_PLATFORMS = [
   { key: 'youtube', label: 'YouTube', dom: 'youtube.com · 선택', ph: '(선택) 좋아요·연령제한 보강용' },
 ];
 let sessionAdminReq = false;
+let sessionValidity = {};
 function adminToken() { return localStorage.getItem('tp-admin') || ''; }
-async function loadSessionStatus() {
+async function loadSessionStatus(check = false) {
   try {
-    const d = await (await fetch('/api/sessions')).json();
+    const d = await (await fetch('/api/sessions' + (check ? '?check=1' : ''))).json();
     sessionAdminReq = d.adminRequired;
+    sessionValidity = d.validity || {};
     return d.configured || {};
   } catch (e) { return {}; }
+}
+function sessionBadge(on, validity) {
+  if (!on) return '<span class="badge-off">미설정</span>';
+  if (validity === 'valid') return '<span class="badge-on"><i></i>연결됨 · 정상</span>';
+  if (validity === 'expired') return '<span class="badge-exp"><svg class="ic"><use href="#i-lock"/></svg>만료됨 · 다시 입력</span>';
+  return '<span class="badge-saved"><i></i>저장됨</span>';  // saved but not yet verified
 }
 function renderSessionRows(configured) {
   const box = $('sessionRows');
   box.innerHTML = '';
   SESSION_PLATFORMS.forEach(p => {
     const on = !!configured[p.key];
+    const v = sessionValidity[p.key];
     const row = document.createElement('div');
-    row.className = 'srow';
+    row.className = 'srow' + (v === 'expired' ? ' expired' : '');
     row.innerHTML = `
       <div class="srow-head">
         <span class="plat">${p.label}</span><span class="dom">${p.dom}</span>
-        ${on ? '<span class="badge-on"><i></i>연결됨</span>' : '<span class="badge-off">미설정</span>'}
+        ${sessionBadge(on, v)}
       </div>
       <div class="srow-in">
-        <input type="password" autocomplete="off" placeholder="${p.ph}">
-        <button type="button" class="savebtn">저장</button>
+        <input type="password" autocomplete="off" placeholder="${on ? '저장됨 — 바꾸려면 새 쿠키 붙여넣기' : p.ph}">
+        <button type="button" class="savebtn">${on ? '교체' : '저장'}</button>
         ${on ? '<button type="button" class="clearbtn">삭제</button>' : ''}
       </div>`;
     const input = row.querySelector('input');
@@ -1056,8 +1079,13 @@ async function saveSession(key, value) {
     if (res.status === 403) { localStorage.removeItem('tp-admin'); toast('관리자 토큰이 올바르지 않습니다', 'close'); return; }
     if (!res.ok) { const e = await res.json().catch(()=>({})); toast(e.error || '저장 실패', 'close'); return; }
     const d = await res.json();
+    sessionValidity = d.validity || {};
     renderSessionRows(d.configured);
-    toast(value ? '세션 저장됨 — 이제 인증 수집을 사용합니다' : '세션 삭제됨');
+    if (value) {
+      const v = (d.validity || {})[key];
+      if (v === 'expired') toast('쿠키가 유효하지 않아요 — 값을 다시 확인해 주세요', 'lock');
+      else toast('세션 저장 완료 — 인증 수집을 시작합니다');
+    } else toast('세션 삭제됨');
     // 해당 탭 캐시 무효화 후 재수집
     reelsLoaded = social.x.loaded = social.threads.loaded = false;
     if (['reels','x','threads'].includes(state.tab) || key === 'instagram') {
@@ -1069,9 +1097,11 @@ async function saveSession(key, value) {
   } catch (e) { toast('요청에 실패했습니다', 'close'); }
 }
 async function openSessionModal() {
-  const configured = await loadSessionStatus();
-  renderSessionRows(configured);
+  let configured = await loadSessionStatus(false);
+  renderSessionRows(configured);        // 저장 여부 먼저 즉시 표시
   $('sessionModal').classList.add('open');
+  configured = await loadSessionStatus(true);  // 실제 유효성 검사 후 갱신
+  renderSessionRows(configured);
 }
 $('sessionBtn').onclick = openSessionModal;
 $('sessionClose').onclick = () => $('sessionModal').classList.remove('open');
@@ -1096,14 +1126,21 @@ function toast(msg, icon = 'check') {
 }
 
 /* ---------- 상태 / 스켈레톤 ---------- */
-function showStatus(el, { icon = 'inbox', title, desc = '', retry = null }) {
+function showStatus(el, { icon = 'inbox', title, desc = '', retry = null, action = null }) {
   el.className = 'status show';
   el.innerHTML = `<div class="bigic">${ic(icon)}</div><h4></h4><p></p>`;
   el.querySelector('h4').textContent = title;
   el.querySelector('p').textContent = desc;
+  if (action) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.textContent = action.label;
+    b.onclick = action.fn;
+    el.appendChild(b);
+  }
   if (retry) {
     const b = document.createElement('button');
     b.type = 'button'; b.textContent = '다시 시도';
+    if (action) { b.style.marginLeft = '8px'; b.style.background = 'var(--input)'; b.style.color = 'var(--t2)'; }
     b.onclick = retry;
     el.appendChild(b);
   }
@@ -1401,9 +1438,9 @@ async function loadReels(force = false) {
     if (!reelsData.length) {
       grid.innerHTML = '';
       $('reelsCount').textContent = '';
-      showStatus(status, data.cooldown
-        ? { icon: 'clock', title: '인스타그램이 잠시 조회를 제한했어요', desc: '무인증 조회가 일시 차단된 상태입니다. 서버가 10분마다 자동으로 재시도하며, 차단이 풀리면 이 탭은 자동으로 채워집니다.' }
-        : { icon: 'inbox', title: '가져온 릴스가 없습니다', desc: '잠시 후 새로고침하거나 계정을 추가해 보세요.', retry: () => loadReels(true) });
+      if (data.authed) showStatus(status, { icon: 'key', title: '인스타그램 세션을 확인해 주세요', desc: '로그인 쿠키가 만료됐거나 유효하지 않을 수 있어요. 🔑 아이콘에서 쿠키를 다시 입력하면 릴스가 채워집니다.', action: { label: '세션 설정 열기', fn: openSessionModal } });
+      else if (data.cooldown) showStatus(status, { icon: 'clock', title: '인스타그램이 잠시 조회를 제한했어요', desc: '로그인 없이 조회하면 자주 차단됩니다. 🔑 아이콘에서 인스타 세션 쿠키를 넣으면 안정적으로 수집돼요.', action: { label: '세션 설정 열기', fn: openSessionModal } });
+      else showStatus(status, { icon: 'inbox', title: '가져온 릴스가 없습니다', desc: '잠시 후 새로고침하거나 계정을 추가해 보세요.', retry: () => loadReels(true) });
       return;
     }
     renderReels();
@@ -1566,7 +1603,7 @@ async function loadSocial(kind, force = false) {
     if (!cfg.data.length) {
       listEl.innerHTML = '';
       if (kind === 'threads') showThreadsFallback(data.accounts);
-      else if (data.cooldown) showStatus(statusEl, { icon: 'clock', title: 'X가 잠시 조회를 제한했어요', desc: '무인증 조회가 일시 제한된 상태입니다. 서버가 10분마다 자동으로 재시도하며, 제한이 풀리면 이 탭은 자동으로 채워집니다.' });
+      else if (data.cooldown) showStatus(statusEl, { icon: 'clock', title: 'X가 잠시 조회를 제한했어요', desc: '서버가 자동으로 재시도합니다. 잠시 후 다시 확인해 주세요.', retry: () => loadSocial(kind, true) });
       else showStatus(statusEl, { icon: 'inbox', title: '가져온 포스트가 없습니다', desc: '계정명을 확인하거나 잠시 후 새로고침해 주세요.', retry: () => loadSocial(kind, true) });
       return;
     }
