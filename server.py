@@ -444,9 +444,45 @@ def ig_profile_json(username: str, opener=None, csrf: str = ""):
         return json.loads(resp.read().decode())
 
 
+def ig_feed_json(user_id: str, cookie: str, csrf: str, username: str):
+    """로그인 세션으로 계정 피드(미디어 목록)를 가져옵니다. 401/403/429는 전파합니다."""
+    url = "https://www.instagram.com/api/v1/feed/user/%s/?count=12" % quote(str(user_id))
+    req = urllib.request.Request(url)
+    req.add_header("User-Agent", UA)
+    req.add_header("x-ig-app-id", IG_APP_ID)
+    req.add_header("Cookie", cookie)
+    if csrf:
+        req.add_header("x-csrftoken", csrf)
+    req.add_header("Referer", "https://www.instagram.com/%s/" % quote(username))
+    with urllib.request.urlopen(req, timeout=12) as resp:
+        return json.loads(resp.read().decode())
+
+
+def _ig_reel_item(m, username):
+    """피드 아이템(미디어)에서 릴스(영상, media_type=2)만 표준 형태로 변환합니다."""
+    if not isinstance(m, dict) or m.get("media_type") != 2:
+        return None
+    cap = m.get("caption")
+    title = (cap.get("text", "").split("\n")[0][:120] if isinstance(cap, dict) else "") or "(설명 없음)"
+    cands = (m.get("image_versions2") or {}).get("candidates") or []
+    return {
+        "account": username,
+        "title": title,
+        "views": m.get("play_count") or m.get("ig_play_count") or 0,
+        "likes": m.get("like_count") or 0,
+        "comments": m.get("comment_count") or 0,
+        "thumbnail": cands[0]["url"] if cands else "",
+        "url": "https://www.instagram.com/reel/%s/" % m.get("code", ""),
+        "takenAt": m.get("taken_at") or 0,
+    }
+
+
 def fetch_ig_reels(username: str, opener=None, csrf: str = ""):
-    """인스타그램 웹 내부 API(무인증)로 계정의 최근 릴스를 가져옵니다.
-    차단 관련 HTTPError(401/403/429)는 호출자에게 전파합니다."""
+    """계정의 최근 릴스를 가져옵니다.
+    - 로그인 세션이 있으면: 프로필로 user_id 확보 → 피드 API로 미디어 수집(현재 유일하게 안정적).
+    - 없으면: 무인증 web_profile_info(대부분 차단됨) 폴백.
+    차단 관련 HTTPError(401/403/429)는 호출자에게 전파해 쿨다운 판단에 씁니다."""
+    cookie = session_cookie("instagram")
     try:
         data = ig_profile_json(username, opener, csrf)
     except urllib.error.HTTPError as e:
@@ -456,6 +492,30 @@ def fetch_ig_reels(username: str, opener=None, csrf: str = ""):
     except Exception:
         return []
     user = (data.get("data") or {}).get("user") or {}
+
+    # 1) 인증 상태: 피드 API로 실제 미디어 수집
+    if cookie and user.get("id"):
+        eff_csrf = cookie_value(cookie, "csrftoken") or csrf
+        try:
+            feed = ig_feed_json(user["id"], cookie, eff_csrf, username)
+        except urllib.error.HTTPError as e:
+            if e.code in (401, 403, 429):
+                raise
+            feed = {}
+        except Exception:
+            feed = {}
+        items = feed.get("items") or feed.get("profile_grid_items") or []
+        reels, seen = [], set()
+        for it in items:
+            m = it.get("media") if isinstance(it.get("media"), dict) else it
+            r = _ig_reel_item(m, username)
+            if r and r["url"] not in seen:
+                seen.add(r["url"])
+                reels.append(r)
+        if reels:
+            return reels
+
+    # 2) 무인증 폴백: 예전 web_profile_info 그래프 구조(현재는 대부분 빈 값)
     reels = []
     for edge in (user.get("edge_owner_to_timeline_media") or {}).get("edges", []):
         n = edge.get("node", {})
@@ -482,10 +542,10 @@ def get_reels(force: bool):
 
     def fetch():
         # 인스타그램은 병렬·고빈도 무인증 요청에 IP 차단(401)을 걸므로 순차 + 간격으로 순하게 수집합니다.
-        # 로그인 세션이 있으면 차단이 잘 걸리지 않아 조금 더 빠르게 수집합니다.
-        if in_cooldown("ig"):
-            return []
+        # 로그인 세션이 있으면 차단이 잘 걸리지 않아 조금 더 빠르게 수집하고, 쿨다운도 건너뜁니다.
         authed = bool(session_cookie("instagram"))
+        if in_cooldown("ig") and not authed:
+            return []
         opener, csrf = (None, "") if authed else _ig_opener()
         gap = (0.3, 0.4) if authed else (1.0, 0.8)
         merged = []
@@ -523,18 +583,24 @@ def _find_timeline_entries(node):
     return None
 
 
-# X 웹앱 공개 게스트 베어러(모든 브라우저가 동일하게 사용) + GraphQL 쿼리 ID.
-# 쿼리 ID는 X가 수시로 바꾸므로, 인증 수집이 안 되면 여기 값을 최신으로 갱신하세요.
+# X 웹앱 공개 베어러(모든 브라우저가 동일하게 사용) + GraphQL 쿼리 ID.
+# 쿼리 ID는 X가 수시로 바꾸므로, 수집이 안 되면 여기 값을 최신으로 갱신하세요.
 X_BEARER = ("AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D"
             "1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA")
 X_QID_USER = "G3KGOASz96M-Qu0nwmGXNg"    # UserByScreenName
 X_QID_TWEETS = "E3opETHurmVJflFsUBVuUQ"  # UserTweets
 X_FEATURES = {
+    "hidden_profile_likes_enabled": True,
+    "hidden_profile_subscriptions_enabled": True,
     "responsive_web_graphql_exclude_directive_enabled": True,
     "verified_phone_label_enabled": False,
+    "subscriptions_verification_info_is_identity_verified_enabled": True,
+    "subscriptions_verification_info_verified_since_enabled": True,
+    "highlights_tweets_tab_ui_enabled": True,
+    "responsive_web_twitter_article_notes_tab_enabled": True,
     "creator_subscriptions_tweet_preview_api_enabled": True,
-    "responsive_web_graphql_timeline_navigation_enabled": True,
     "responsive_web_graphql_skip_user_profile_image_extensions_enabled": False,
+    "responsive_web_graphql_timeline_navigation_enabled": True,
     "c9s_tweet_anatomy_moderator_badge_enabled": True,
     "tweetypie_unmention_optimization_enabled": True,
     "responsive_web_edit_tweet_api_enabled": True,
@@ -550,73 +616,137 @@ X_FEATURES = {
     "longform_notetweets_rich_text_read_enabled": True,
     "longform_notetweets_inline_media_enabled": True,
     "responsive_web_enhance_cards_enabled": False,
+    "articles_preview_enabled": True,
+    "rweb_tipjar_consumption_enabled": True,
+    "communities_web_enable_tweet_community_results_fetch": True,
+    "creator_subscriptions_quote_tweet_preview_enabled": False,
 }
 
-
-def _x_auth_headers():
-    cookie = session_cookie("x")
-    ct0 = cookie_value(cookie, "ct0")
-    return {
-        "Authorization": "Bearer " + X_BEARER,
-        "Cookie": cookie,
-        "x-csrf-token": ct0,
-        "x-twitter-auth-type": "OAuth2Session",
-        "x-twitter-active-user": "yes",
-        "Content-Type": "application/json",
-    }, ct0
+# 게스트 토큰(쿠키 없이도 GraphQL을 쓸 수 있게 해주는 공개 토큰). 3시간 캐시.
+_x_guest = {"token": "", "ts": 0}
+_x_guest_lock = threading.Lock()
 
 
-def _x_gql(qid, op, variables, headers):
+def x_guest_token(force=False):
+    with _x_guest_lock:
+        if not force and _x_guest["token"] and time.time() - _x_guest["ts"] < 10000:
+            return _x_guest["token"]
+    try:
+        req = urllib.request.Request("https://api.twitter.com/1.1/guest/activate.json", data=b"")
+        req.add_header("Authorization", "Bearer " + X_BEARER)
+        req.add_header("User-Agent", UA)
+        with urllib.request.urlopen(req, timeout=10) as r:
+            tok = json.loads(r.read())["guest_token"]
+        with _x_guest_lock:
+            _x_guest["token"] = tok
+            _x_guest["ts"] = time.time()
+        return tok
+    except Exception:
+        return ""
+
+
+def _x_headers(authed: bool):
+    """authed=True면 로그인 쿠키(auth_token+ct0)로, 아니면 게스트 토큰으로 인증합니다."""
+    h = {"Authorization": "Bearer " + X_BEARER, "User-Agent": UA,
+         "Content-Type": "application/json", "x-twitter-active-user": "yes"}
+    if authed:
+        cookie = session_cookie("x")
+        ct0 = cookie_value(cookie, "ct0")
+        if not ct0:
+            return None
+        h["Cookie"] = cookie
+        h["x-csrf-token"] = ct0
+        h["x-twitter-auth-type"] = "OAuth2Session"
+    else:
+        gt = x_guest_token()
+        if not gt:
+            return None
+        h["x-guest-token"] = gt
+    return h
+
+
+def _x_gql(qid, op, variables, headers, retry_guest=True):
     url = "https://x.com/i/api/graphql/%s/%s?variables=%s&features=%s" % (
         qid, op, quote(json.dumps(variables)), quote(json.dumps(X_FEATURES)))
     req = urllib.request.Request(url)
     for k, v in headers.items():
         req.add_header(k, v)
-    req.add_header("User-Agent", UA)
-    with urllib.request.urlopen(req, timeout=12) as resp:
-        return json.loads(resp.read().decode())
+    try:
+        with urllib.request.urlopen(req, timeout=12) as resp:
+            return json.loads(resp.read().decode())
+    except urllib.error.HTTPError as e:
+        # 게스트 토큰 만료(401/403)면 새로 발급받아 한 번 재시도
+        if retry_guest and e.code in (401, 403) and "x-guest-token" in headers:
+            gt = x_guest_token(force=True)
+            if gt:
+                headers = dict(headers, **{"x-guest-token": gt})
+                return _x_gql(qid, op, variables, headers, retry_guest=False)
+        raise
+
+
+def _x_pick_media(lg):
+    for mm in ((lg.get("extended_entities") or {}).get("media") or []):
+        if mm.get("media_url_https"):
+            return mm["media_url_https"]
+    return ""
 
 
 def _parse_x_graphql(data, username):
-    posts = []
+    """UserTweets 응답의 timeline instructions에서 이 계정의 원본 트윗만 추립니다
+    (리트윗·인용된 남의 트윗 제외)."""
+    posts, seen = [], set()
 
-    def walk(o):
+    def add_tweet(t):
+        if not isinstance(t, dict):
+            return
+        if t.get("__typename") == "TweetWithVisibilityResults":
+            t = t.get("tweet") or {}
+        lg = t.get("legacy")
+        if not isinstance(lg, dict) or lg.get("favorite_count") is None:
+            return
+        if lg.get("retweeted_status_result"):  # 리트윗 제외
+            return
+        tid = lg.get("id_str", "")
+        if not tid or tid in seen:
+            return
+        user = (((t.get("core") or {}).get("user_results") or {}).get("result") or {})
+        ulg = user.get("legacy") or {}
+        screen = ulg.get("screen_name", "")
+        # 이 계정 본인 글만 (대소문자 무시)
+        if screen and screen.lower() != username.lower():
+            return
+        seen.add(tid)
+        posts.append({
+            "account": username, "name": ulg.get("name", username),
+            "text": (lg.get("full_text") or "").strip(),
+            "likes": lg.get("favorite_count") or 0,
+            "replies": lg.get("reply_count") or 0,
+            "retweets": lg.get("retweet_count") or 0,
+            "views": int((t.get("views") or {}).get("count", 0) or 0),
+            "media": _x_pick_media(lg),
+            "url": "https://x.com/%s/status/%s" % (username, tid),
+            "createdAt": lg.get("created_at", ""),
+        })
+
+    def walk_entries(o):
+        # itemContent.tweet_results.result 만 훑어 인용/중첩 트윗 오염을 막습니다.
         if isinstance(o, dict):
-            if o.get("__typename") == "Tweet" and isinstance(o.get("legacy"), dict):
-                lg = o["legacy"]
-                if lg.get("favorite_count") is not None and not lg.get("retweeted_status_result"):
-                    user = (((o.get("core") or {}).get("user_results") or {}).get("result") or {})
-                    uname = (user.get("legacy") or {}).get("name", username)
-                    media = ""
-                    for mm in ((lg.get("extended_entities") or {}).get("media") or []):
-                        if mm.get("media_url_https"):
-                            media = mm["media_url_https"]
-                            break
-                    posts.append({
-                        "account": username, "name": uname,
-                        "text": (lg.get("full_text") or "").strip(),
-                        "likes": lg.get("favorite_count") or 0,
-                        "replies": lg.get("reply_count") or 0,
-                        "retweets": lg.get("retweet_count") or 0,
-                        "views": int((o.get("views") or {}).get("count", 0) or 0),
-                        "media": media,
-                        "url": "https://x.com/%s/status/%s" % (username, lg.get("id_str", "")),
-                        "createdAt": lg.get("created_at", ""),
-                    })
+            if "tweet_results" in o and isinstance(o["tweet_results"], dict):
+                add_tweet(o["tweet_results"].get("result"))
             for v in o.values():
-                walk(v)
+                walk_entries(v)
         elif isinstance(o, list):
             for v in o:
-                walk(v)
-    walk(data)
+                walk_entries(v)
+    walk_entries(data)
     return posts
 
 
-def fetch_x_posts_auth(username: str):
-    """로그인 세션 쿠키(auth_token+ct0)로 X GraphQL을 호출해 트윗을 가져옵니다.
-    쿼리 ID 만료 등으로 실패하면 [] 반환 → syndication으로 폴백됩니다."""
-    headers, ct0 = _x_auth_headers()
-    if not ct0:
+def fetch_x_graphql(username: str, authed: bool):
+    """X GraphQL로 계정의 트윗을 가져옵니다. authed=True면 로그인 쿠키, 아니면 게스트 토큰.
+    실패하면 [] 반환 → 상위에서 다음 방법으로 폴백."""
+    headers = _x_headers(authed)
+    if headers is None:
         return []
     try:
         u = _x_gql(X_QID_USER, "UserByScreenName",
@@ -634,12 +764,15 @@ def fetch_x_posts_auth(username: str):
 
 
 def fetch_x_posts(username: str):
-    """계정의 최근 트윗을 참여수와 함께 가져옵니다.
-    로그인 세션이 있으면 GraphQL(인증)을 우선 시도하고, 없거나 실패하면 syndication(무인증)으로 폴백합니다."""
+    """계정의 최근 트윗을 가져옵니다. 우선순위:
+    1) 로그인 세션(있으면) → 2) 게스트 토큰 GraphQL(쿠키 불필요) → 3) syndication 폴백."""
     if session_cookie("x"):
-        authed = fetch_x_posts_auth(username)
-        if authed:
-            return authed
+        r = fetch_x_graphql(username, authed=True)
+        if r:
+            return r
+    r = fetch_x_graphql(username, authed=False)
+    if r:
+        return r
     url = "https://syndication.twitter.com/srv/timeline-profile/screen-name/" + quote(username)
     try:
         _, body = http_get(url, headers={"Accept": "text/html"}, timeout=12, retries=0)
@@ -690,25 +823,21 @@ def get_x_posts(force: bool):
     accounts = load_accounts(path, defaults)
 
     def fetch():
-        # syndication은 동시·고빈도 요청에 429를 걸므로 순차 + 간격으로 수집합니다.
-        if in_cooldown("x"):
-            return []
+        # 게스트 토큰/로그인 GraphQL은 syndication보다 안정적이라 대부분 여기서 성공합니다.
+        # 쿨다운은 무인증 syndication 폴백에만 해당하므로, GraphQL 경로는 항상 시도합니다.
         posts = []
         misses = 0
         for i, acct in enumerate(accounts):
             if i:
-                time.sleep(0.5 + random.random() * 0.5)
+                time.sleep(0.3 + random.random() * 0.4)
             try:
                 chunk = fetch_x_posts(acct)
-                if not chunk:  # 빈 응답이면 한 번만 재시도
-                    time.sleep(0.8)
-                    chunk = fetch_x_posts(acct)
             except urllib.error.HTTPError:
-                set_cooldown("x", 900)
-                break
+                set_cooldown("x", 900)  # syndication 429
+                chunk = []
             posts.extend(chunk)
             misses = 0 if chunk else misses + 1
-            if misses >= 4:  # 연속 실패는 서비스 쪽 문제 — 중단
+            if misses >= 5:  # 연속 실패는 서비스 쪽 문제 — 중단
                 break
         return posts
     posts, fetched_at = cached(("x", tuple(accounts)), force, fetch)
@@ -723,12 +852,10 @@ def threads_cookie():
 
 def _threads_lsd_and_userid(username: str):
     """스레드 프로필 페이지에서 LSD 토큰을, 인스타 API에서 user_id를 얻습니다.
-    로그인 세션이 있으면 인증 상태로 페이지를 받아 안정적인 LSD를 얻습니다."""
+    ※ 스레드 페이지에는 로그인 쿠키를 붙이지 않습니다 — 붙이면 404가 납니다(무인증으로 받아야 LSD가 나옴)."""
     lsd = None
-    cookie = threads_cookie()
     try:
-        _, body = http_get("https://www.threads.com/@" + quote(username), timeout=12,
-                           headers={"Cookie": cookie} if cookie else None)
+        _, body = http_get("https://www.threads.com/@" + quote(username), timeout=12)
         m = re.search(r'"LSD",\[\],\{"token":"([^"]+)"', body.decode("utf-8", "ignore"))
         lsd = m.group(1) if m else None
     except Exception:
@@ -1045,14 +1172,16 @@ class Handler(BaseHTTPRequestHandler):
 
         if parsed.path == "/api/reels":
             reels, accounts, fetched_at = get_reels(force)
-            self._send(200, {"reels": reels[:80], "accounts": accounts,
-                             "fetchedAt": fetched_at, "cooldown": in_cooldown("ig")})
+            self._send(200, {"reels": reels[:80], "accounts": accounts, "fetchedAt": fetched_at,
+                             "cooldown": in_cooldown("ig") and not session_cookie("instagram"),
+                             "authed": bool(session_cookie("instagram"))})
             return
 
         if parsed.path == "/api/x":
             posts, accounts, fetched_at = get_x_posts(force)
-            self._send(200, {"posts": posts, "accounts": accounts,
-                             "fetchedAt": fetched_at, "cooldown": in_cooldown("x")})
+            self._send(200, {"posts": posts, "accounts": accounts, "fetchedAt": fetched_at,
+                             "cooldown": in_cooldown("x") and not session_cookie("x"),
+                             "authed": bool(session_cookie("x"))})
             return
 
         if parsed.path == "/api/threads":
