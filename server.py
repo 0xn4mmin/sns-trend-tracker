@@ -460,14 +460,16 @@ def get_videos(category: str, period: str, shorts: bool, force: bool, enrich: bo
 
 # ================================================================ 계정 목록
 def load_accounts(path, defaults):
+    # 파일이 있으면 그 내용을 존중합니다 — 빈 리스트([])도 '사용자가 다 지운 상태'로 인정.
+    # (예전엔 빈 리스트를 falsy로 보고 기본 계정을 되살리는 버그가 있었음)
     try:
         with open(path) as f:
             accounts = json.load(f)
-            if isinstance(accounts, list) and accounts:
-                return accounts
+        if isinstance(accounts, list):
+            return [a for a in accounts if isinstance(a, str)]
     except (OSError, json.JSONDecodeError):
         pass
-    return list(defaults)
+    return list(defaults)  # 파일이 아예 없거나 손상된 경우에만 기본 계정
 
 
 def save_accounts(path, accounts):
