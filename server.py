@@ -513,9 +513,11 @@ def ig_profile_json(username: str, opener=None, csrf: str = ""):
         return json.loads(resp.read().decode())
 
 
-def ig_feed_json(user_id: str, cookie: str, csrf: str, username: str):
-    """로그인 세션으로 계정 피드(미디어 목록)를 가져옵니다. 401/403/429는 전파합니다."""
-    url = "https://www.instagram.com/api/v1/feed/user/%s/?count=12" % quote(str(user_id))
+def ig_feed_json(username: str, cookie: str, csrf: str):
+    """로그인 세션으로 계정 피드(미디어 목록)를 username 기준으로 가져옵니다. 401/403/429는 전파합니다.
+    ※ username 기반 엔드포인트를 씁니다 — web_profile_info로 user_id를 먼저 받는 방식은
+      데이터센터 IP(Render 등)에서 빈 응답을 주기 때문입니다."""
+    url = "https://www.instagram.com/api/v1/feed/user/%s/username/?count=12" % quote(username)
     req = urllib.request.Request(url)
     req.add_header("User-Agent", UA)
     req.add_header("x-ig-app-id", IG_APP_ID)
@@ -552,21 +554,12 @@ def fetch_ig_reels(username: str, opener=None, csrf: str = ""):
     - 없으면: 무인증 web_profile_info(대부분 차단됨) 폴백.
     차단 관련 HTTPError(401/403/429)는 호출자에게 전파해 쿨다운 판단에 씁니다."""
     cookie = session_cookie("instagram")
-    try:
-        data = ig_profile_json(username, opener, csrf)
-    except urllib.error.HTTPError as e:
-        if e.code in (401, 403, 429):
-            raise
-        return []
-    except Exception:
-        return []
-    user = (data.get("data") or {}).get("user") or {}
 
-    # 1) 인증 상태: 피드 API로 실제 미디어 수집
-    if cookie and user.get("id"):
+    # 1) 인증 상태: username 기반 피드 API로 실제 미디어 수집 (Render 등 클라우드에서도 동작)
+    if cookie:
         eff_csrf = cookie_value(cookie, "csrftoken") or csrf
         try:
-            feed = ig_feed_json(user["id"], cookie, eff_csrf, username)
+            feed = ig_feed_json(username, cookie, eff_csrf)
         except urllib.error.HTTPError as e:
             if e.code in (401, 403, 429):
                 raise
@@ -581,10 +574,18 @@ def fetch_ig_reels(username: str, opener=None, csrf: str = ""):
             if r and r["url"] not in seen:
                 seen.add(r["url"])
                 reels.append(r)
-        if reels:
-            return reels
+        return reels
 
-    # 2) 무인증 폴백: 예전 web_profile_info 그래프 구조(현재는 대부분 빈 값)
+    # 2) 무인증 폴백: web_profile_info 그래프 구조(현재는 대부분 빈 값 → 쿨다운 유도)
+    try:
+        data = ig_profile_json(username, opener, csrf)
+    except urllib.error.HTTPError as e:
+        if e.code in (401, 403, 429):
+            raise
+        return []
+    except Exception:
+        return []
+    user = (data.get("data") or {}).get("user") or {}
     reels = []
     for edge in (user.get("edge_owner_to_timeline_media") or {}).get("edges", []):
         n = edge.get("node", {})
