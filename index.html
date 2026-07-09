@@ -506,6 +506,10 @@
     box-shadow: 0 4px 14px rgba(255, 61, 129, .3);
   }
   .status button:hover { opacity: .9; }
+  .status-actions { margin-top: 17px; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .status-actions button { margin-top: 0; }
+  .status-actions button.ghost { background: var(--input); color: var(--t2); border: 1px solid var(--border); box-shadow: none; }
+  .status-actions button.ghost:hover { border-color: var(--border-h); color: var(--text); }
 
   .sk { pointer-events: none; animation: none !important; }
   .sk-shimmer { position: relative; overflow: hidden; background: var(--skel1); }
@@ -1126,23 +1130,26 @@ function toast(msg, icon = 'check') {
 }
 
 /* ---------- 상태 / 스켈레톤 ---------- */
-function showStatus(el, { icon = 'inbox', title, desc = '', retry = null, action = null }) {
+function showStatus(el, { icon = 'inbox', title, desc = '', retry = null, action = null, actions = null }) {
   el.className = 'status show';
   el.innerHTML = `<div class="bigic">${ic(icon)}</div><h4></h4><p></p>`;
   el.querySelector('h4').textContent = title;
   el.querySelector('p').textContent = desc;
-  if (action) {
-    const b = document.createElement('button');
-    b.type = 'button'; b.textContent = action.label;
-    b.onclick = action.fn;
-    el.appendChild(b);
-  }
-  if (retry) {
-    const b = document.createElement('button');
-    b.type = 'button'; b.textContent = '다시 시도';
-    if (action) { b.style.marginLeft = '8px'; b.style.background = 'var(--input)'; b.style.color = 'var(--t2)'; }
-    b.onclick = retry;
-    el.appendChild(b);
+  const list = [];
+  if (action) list.push(action);
+  if (actions) list.push(...actions);
+  if (retry) list.push({ label: '다시 시도', fn: retry, ghost: true });
+  if (list.length) {
+    const row = document.createElement('div');
+    row.className = 'status-actions';
+    list.forEach(a => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.textContent = a.label;
+      if (a.ghost) b.className = 'ghost';
+      b.onclick = a.fn;
+      row.appendChild(b);
+    });
+    el.appendChild(row);
   }
 }
 function hideStatus(el) { el.className = 'status'; el.innerHTML = ''; }
@@ -1210,6 +1217,49 @@ document.querySelectorAll('.managebtn').forEach(btn => {
     btn.classList.toggle('on', open);
   };
 });
+
+/* ---------- 빈 화면 CTA: 계정 추가 / 예시 추가 ---------- */
+const MANAGE = {
+  reels: { panel: 'reelsManage', input: 'accInput' },
+  x: { panel: 'xManage', input: 'xInput' },
+  threads: { panel: 'thManage', input: 'thInput' },
+  tiktok: { panel: 'ttManage', input: 'ttInput' },
+};
+const suggestedAccounts = {};
+function openManage(kind) {
+  const m = MANAGE[kind];
+  const panel = $(m.panel);
+  if (!panel.classList.contains('open')) {
+    panel.classList.add('open');
+    const btn = document.querySelector(`.managebtn[data-panel="${m.panel}"]`);
+    if (btn) btn.classList.add('on');
+  }
+  panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(() => $(m.input).focus(), 250);
+}
+async function addSuggested(kind) {
+  const list = suggestedAccounts[kind] || [];
+  if (!list.length) return;
+  try {
+    await fetch(`/api/${kind}/accounts`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'add_many', usernames: list })
+    });
+    toast(`추천 계정 ${list.length}개를 추가했어요`);
+    RELOADERS[kind](true);
+  } catch (e) { toast('추가에 실패했습니다', 'close'); }
+}
+function emptyAccountsCTA(el, kind) {
+  const hasSuggested = (suggestedAccounts[kind] || []).length > 0;
+  showStatus(el, {
+    icon: 'users', title: '구독 계정이 없어요',
+    desc: '보고 싶은 크리에이터·브랜드 계정을 추가하면 인기 콘텐츠를 지표순으로 모아 보여드려요.',
+    actions: [
+      { label: '＋ 계정 추가', fn: () => openManage(kind) },
+      ...(hasSuggested ? [{ label: 'AI 계정 예시 추가', fn: () => addSuggested(kind), ghost: true }] : []),
+    ],
+  });
+}
 
 /* ---------- 카테고리 칩 ---------- */
 async function initCategories() {
@@ -1432,13 +1482,15 @@ async function loadReels(force = false) {
   try {
     const data = await (await fetch('/api/reels' + (force ? '?force=1' : ''))).json();
     renderAccChips('accChips', 'reels', data.accounts);
+    suggestedAccounts.reels = data.suggested || [];
     setUpdated(data.fetchedAt);
     reelsData = data.reels || [];
     reelsLoaded = true;
     if (!reelsData.length) {
       grid.innerHTML = '';
       $('reelsCount').textContent = '';
-      if (data.authed) showStatus(status, { icon: 'key', title: '인스타그램 세션을 확인해 주세요', desc: '로그인 쿠키가 만료됐거나 유효하지 않을 수 있어요. 🔑 아이콘에서 쿠키를 다시 입력하면 릴스가 채워집니다.', action: { label: '세션 설정 열기', fn: openSessionModal } });
+      if (!(data.accounts || []).length) emptyAccountsCTA(status, 'reels');
+      else if (data.authed) showStatus(status, { icon: 'key', title: '인스타그램 세션을 확인해 주세요', desc: '로그인 쿠키가 만료됐거나 유효하지 않을 수 있어요. 🔑 아이콘에서 쿠키를 다시 입력하면 릴스가 채워집니다.', action: { label: '세션 설정 열기', fn: openSessionModal } });
       else if (data.cooldown) showStatus(status, { icon: 'clock', title: '인스타그램이 잠시 조회를 제한했어요', desc: '로그인 없이 조회하면 자주 차단됩니다. 🔑 아이콘에서 인스타 세션 쿠키를 넣으면 안정적으로 수집돼요.', action: { label: '세션 설정 열기', fn: openSessionModal } });
       else showStatus(status, { icon: 'inbox', title: '가져온 릴스가 없습니다', desc: '잠시 후 새로고침하거나 계정을 추가해 보세요.', retry: () => loadReels(true) });
       return;
@@ -1597,12 +1649,14 @@ async function loadSocial(kind, force = false) {
   try {
     const data = await (await fetch('/api/' + kind + (force ? '?force=1' : ''))).json();
     renderAccChips(chipsId, kind, data.accounts);
+    suggestedAccounts[kind] = data.suggested || [];
     setUpdated(data.fetchedAt);
     cfg.data = data.posts || [];
     cfg.loaded = true;
     if (!cfg.data.length) {
       listEl.innerHTML = '';
-      if (kind === 'threads') showThreadsFallback(data.accounts);
+      if (!(data.accounts || []).length) { if (kind === 'threads') $('thFallback').style.display = 'none'; emptyAccountsCTA(statusEl, kind); }
+      else if (kind === 'threads') showThreadsFallback(data.accounts);
       else if (data.cooldown) showStatus(statusEl, { icon: 'clock', title: 'X가 잠시 조회를 제한했어요', desc: '서버가 자동으로 재시도합니다. 잠시 후 다시 확인해 주세요.', retry: () => loadSocial(kind, true) });
       else showStatus(statusEl, { icon: 'inbox', title: '가져온 포스트가 없습니다', desc: '계정명을 확인하거나 잠시 후 새로고침해 주세요.', retry: () => loadSocial(kind, true) });
       return;
@@ -1642,13 +1696,15 @@ async function loadTikTok(force = false) {
   try {
     const data = await (await fetch('/api/tiktok' + (force ? '?force=1' : ''))).json();
     renderAccChips('ttChips', 'tiktok', data.accounts);
+    suggestedAccounts.tiktok = data.suggested || [];
     setUpdated(data.fetchedAt);
     tiktokData = data.posts || [];
     tiktokLoaded = true;
     if (!tiktokData.length) {
       grid.innerHTML = '';
       $('ttCount').textContent = '';
-      showStatus(status, { icon: 'inbox', title: '가져온 영상이 없습니다', desc: '무료 API가 일시적으로 제한되는 경우가 있어요. 잠시 후 새로고침해 주세요.', retry: () => loadTikTok(true) });
+      if (!(data.accounts || []).length) emptyAccountsCTA(status, 'tiktok');
+      else showStatus(status, { icon: 'inbox', title: '가져온 영상이 없습니다', desc: '무료 API가 일시적으로 제한되는 경우가 있어요. 잠시 후 새로고침해 주세요.', retry: () => loadTikTok(true) });
       return;
     }
     renderTikTok();

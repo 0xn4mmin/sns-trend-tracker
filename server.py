@@ -232,21 +232,21 @@ PERIOD_EXCLUDE = {
 IG_APP_ID = "936619743392459"           # instagram.com 웹이 쓰는 공개 앱 ID
 IG_APP_ID_THREADS = "238260118697367"   # threads.com 웹이 쓰는 공개 앱 ID
 
-DEFAULT_IG_ACCOUNTS = [
-    "openai", "runwayapp", "pika_labs", "lumalabsai", "midjourney",
-    "klingai_official", "heygen_official", "higgsfield.ai", "googledeepmind",
-]
-DEFAULT_X_ACCOUNTS = [
-    "OpenAI", "runwayml", "Kling_ai", "GoogleDeepMind", "midjourney",
-    "LumaLabsAI", "pika_labs", "heygen_com", "elevenlabsio", "AIatMeta",
-]
-DEFAULT_THREADS_ACCOUNTS = [
-    "openai", "runway", "google", "meta.ai", "zuck",
-]
-DEFAULT_TIKTOK_ACCOUNTS = [
-    "openai", "runwayapp", "krea.ai", "elevenlabs", "sora",
-    "zachking", "khaby.lame", "google",
-]
+# 기본 구독 계정은 비워둡니다 — 사용자가 직접 추가합니다(빈 화면에 안내 CTA 표시).
+# 참고용 추천 계정(빈 화면에서 '예시 추가' 버튼으로 넣을 수 있게 API로 노출).
+DEFAULT_IG_ACCOUNTS = []
+DEFAULT_X_ACCOUNTS = []
+DEFAULT_THREADS_ACCOUNTS = []
+DEFAULT_TIKTOK_ACCOUNTS = []
+SUGGESTED_ACCOUNTS = {
+    "reels": ["openai", "runwayapp", "pika_labs", "lumalabsai", "midjourney",
+              "klingai_official", "heygen_official", "higgsfield.ai", "googledeepmind"],
+    "x": ["OpenAI", "runwayml", "Kling_ai", "GoogleDeepMind", "midjourney",
+          "LumaLabsAI", "pika_labs", "heygen_com", "elevenlabsio", "AIatMeta"],
+    "threads": ["openai", "runway", "google", "meta.ai", "zuck"],
+    "tiktok": ["openai", "runwayapp", "krea.ai", "elevenlabs", "sora",
+               "zachking", "khaby.lame", "google"],
+}
 
 # 계정 목록을 쓰는 소스별 설정 (파일 경로, 기본 계정)
 ACCOUNT_SOURCES = {
@@ -1246,24 +1246,28 @@ class Handler(BaseHTTPRequestHandler):
             reels, accounts, fetched_at = get_reels(force)
             self._send(200, {"reels": reels[:80], "accounts": accounts, "fetchedAt": fetched_at,
                              "cooldown": in_cooldown("ig") and not session_cookie("instagram"),
-                             "authed": bool(session_cookie("instagram"))})
+                             "authed": bool(session_cookie("instagram")),
+                             "suggested": SUGGESTED_ACCOUNTS["reels"]})
             return
 
         if parsed.path == "/api/x":
             posts, accounts, fetched_at = get_x_posts(force)
             self._send(200, {"posts": posts, "accounts": accounts, "fetchedAt": fetched_at,
                              "cooldown": in_cooldown("x") and not session_cookie("x"),
-                             "authed": bool(session_cookie("x"))})
+                             "authed": bool(session_cookie("x")),
+                             "suggested": SUGGESTED_ACCOUNTS["x"]})
             return
 
         if parsed.path == "/api/threads":
             posts, accounts, fetched_at = get_threads_posts(force)
-            self._send(200, {"posts": posts, "accounts": accounts, "fetchedAt": fetched_at})
+            self._send(200, {"posts": posts, "accounts": accounts, "fetchedAt": fetched_at,
+                             "suggested": SUGGESTED_ACCOUNTS["threads"]})
             return
 
         if parsed.path == "/api/tiktok":
             posts, accounts, fetched_at = get_tiktok(force)
-            self._send(200, {"posts": posts[:100], "accounts": accounts, "fetchedAt": fetched_at})
+            self._send(200, {"posts": posts[:100], "accounts": accounts, "fetchedAt": fetched_at,
+                             "suggested": SUGGESTED_ACCOUNTS["tiktok"]})
             return
 
         if parsed.path == "/api/ai":
@@ -1348,20 +1352,30 @@ class Handler(BaseHTTPRequestHandler):
                 self._send(400, {"error": "invalid json"})
                 return
             action = req.get("action")
-            raw = (req.get("username") or "").strip().lstrip("@")
-            # X는 대소문자 보존, 인스타/스레드/틱톡은 소문자
-            username = raw if source == "x" else raw.lower()
-            if action == "add" and not USERNAME_RE.match(username):
-                self._send(400, {"error": "invalid username"})
-                return
+            norm = (lambda s: s) if source == "x" else (lambda s: s.lower())
             accounts = load_accounts(path, defaults)
             changed = False
-            if action == "add" and username and username not in accounts:
-                accounts.append(username)
-                changed = True
-            elif action == "remove" and username in accounts:
-                accounts.remove(username)
-                changed = True
+
+            if action == "add_many":
+                # 예시/추천 계정 일괄 추가 (빈 화면 CTA용)
+                for raw in (req.get("usernames") or []):
+                    u = norm((raw or "").strip().lstrip("@"))
+                    if USERNAME_RE.match(u) and u not in accounts:
+                        accounts.append(u)
+                        changed = True
+            else:
+                raw = (req.get("username") or "").strip().lstrip("@")
+                username = norm(raw)  # X는 대소문자 보존, 그 외 소문자
+                if action == "add" and not USERNAME_RE.match(username):
+                    self._send(400, {"error": "invalid username"})
+                    return
+                if action == "add" and username and username not in accounts:
+                    accounts.append(username)
+                    changed = True
+                elif action == "remove" and username in accounts:
+                    accounts.remove(username)
+                    changed = True
+
             if changed:
                 try:
                     save_accounts(path, accounts)
